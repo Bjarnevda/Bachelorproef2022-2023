@@ -1,0 +1,128 @@
+%---------- Inleiding ---------------------------------------------------------
+
+\section{Introductie}%
+\label{sec:introductie}
+
+Web scraping maakt het mogelijk om snel een grote hoeveelheid gegevens van websites te verzamelen en te verwerken. Daarnaast is het ook zeer tijdsefficiënt, waardoor gegevens van verschillende bronnen automatisch kunnen worden verzameld, terwijl dit voorheen een moeizame handmatige inspanning vergde ~(\cite{NYLEN2017277}). Dit zorgt dan ook voor een probleem bij verscheidene bedrijven, aangezien niet elk bedrijf wilt dat hun data automatisch verkrijgbaar is, zo willen online winkels bijvoorbeeld niet dat hun concurrenten alle prijzen kunnen verzamelen om hun eigen prijzen daarop te baseren. Anti-webscrapingstechnieken kunnen hierbij een oplossing bieden waardoor data manueel verzameld zal moeten worden in plaats van automatisch. De doelstelling van deze thesis is dan ook een inzicht te geven in welke technieken het beste passen in een bepaalde situatie (gebruikerservaring/prestaties over effectiviteit of omgekeerd). Daarnaast is in deze bachelorproef er ook voor gekozen om de focus te leggen op het beschermen van webshops.
+\newline
+In deze thesis zal de volgende onderzoeksvraag uitgewerkt worden met bijhorende deelvragen:
+\begin{itemize}
+\item In welke mate is het mogelijk om een website te beschermen tegen de gekende technieken van web scraping en hoe beïnvloeden deze de website?
+    \begin{itemize}
+    \item Hoe beïnvloeden anti-webscrapingstech- nieken de gebruikerservaring?
+    \item Hoe beïnvloeden anti-webscrapingstech- nieken de performance van de website?
+    \item Hoe beïnvloeden anti-webscrapingstech- nieken de Search Engine optimization van de website?
+    \item Wat is op dit moment de meest effectieve oplossing los van de gevolgen?
+    \end{itemize}
+\end{itemize}
+%---------- Stand van zaken ---------------------------------------------------
+
+\section{State-of-the-art}%
+\label{sec:state-of-the-art}
+In deze sectie zal er meer informatie gegeven worden over wat web scraping is, hoe het werkt, welke methodes er bestaan en wat de huidige maatregelen tegen web scraping zijn.
+\subsection{Wat is web scraping?}
+Uit de studies van \cite{Mitchell2018,Zhao2017} kan er geconcludeerd worden dat in theorie web scraping, ook bekend als web extraction of
+harvesten, de activiteit is van het verzamelen van gegevens op een andere manier dan via API calls of menselijke interactie. Dit gebeurt meestal door het schrijven van een geautomatiseerd programma dat een website raadpleegt, gegevens opvraagt waaruit webpagina's bestaan, en die gegevens vervolgens verwerkt om er de benodigde informatie uit te halen en op te slaan in een bestand of database om deze vervolgens later op te vragen of te analyseren  
+\newline
+Volgens \cite{Persson2019} is web scraping opgebouwd uit 3 verschillende fases, namelijk ophaling van data, extractie van data en transformatie van data.
+
+\begin{enumerate}
+    \item \textbf{Ophaling van data}
+\\
+In deze fase moet de gewenste website bereikt worden aan de hand van het HTTP protocol. De effectieve ophaling van data gebeurd  door een library die een HTTP GET request zal sturen naar een bepaalde URL en vervolgens de bijhorende webpagina terugkrijgt als een HTML document via de response.
+    \item \textbf{Extractie van data}
+\\
+Bij deze fase wordt de data die gewenst is geëxtraheerd uit het HTML document verkregen in vorige fase. Dit gebeurd meestal aan de hand van REGEX, HTML parsing libraries of XPath queries om de gewenste data te vinden.
+    \item \textbf{Transformatie van data}
+\\
+Hierbij wordt de data die geëxtraheerd is getransformeerd in een gestructureerde versie
+\end{enumerate}
+
+\subsection{Welke web scraping methodes bestaan er?}
+Niet alle web scraping libraries en frameworks werken op dezelfde manier. Zo bestaan er verschillende methoden om dit aan te pakken, zoals:
+\begin{itemize}
+    \item \textbf{Text-pattern matching}
+    \\
+    Text pattern matching maakt gebruikt van reguliere expressies om aan de hand van een patroon de gewenste tekst terug te vinden in het overkoepelend document.
+    \item \textbf{HTML parsing}
+    \\
+    Deze methode maakt gebruikt van de CSS selectors om data te extraheren uit HTML documenten. Hierbij kan er gezocht worden op e.g. id's en klassen om de juiste data terug te vinden. (\cite{Persson2019})
+    \item \textbf{DOM parsing}
+    \\ In tegenstelling tot HTML parsing gaat DOM Parsing zich focussen op XPath (XML Path Language)  i.p.v css selectors. Xpath is een query taal dat gebruikt wordt om te navigeren in XML documenten en daarin eventueel selecties te maken. Xpath kan ook gebruikt worden om te navigeren in HTML documenten aangezien deze ook gebruik maken van de XML boomstructuur. (\cite{Persson2019,Mitchell2018})
+    \item \textbf{Pagina analyse a.d.h.v computer visie}
+    \\
+    Deze methode van web scraping kan vooral gebruikt in situaties waar de DOM obscuur is en vaak ge-update wordt maar de visuele structuur van de webpagina hetzelfde blijft. De gedachtegang voor deze methode is om een machine learning model te gaan trainen op gelabelde screenshots van een gelijkaardige website en deze vervolgens te gaan gebruiken op de "target" website om gewenste data op te halen.
+\end{itemize}
+
+\subsection{Waarom zou men dit willen tegengaan?}
+\textbf{Note: deze sectie moet ik nog herschrijven naar een doorlopende tekst}
+Een grote reden hiervoor is de gevolgen dat de webscrapers kunnen hebben op de website en het bedrijf: 
+\begin{itemize}
+    \item Geldverlies door mijden van advertenties \newline \autocite{Krotov2020}
+    \item Het mogelijk maken voor concurrenten om prijzen en aanbiedingen te onderbieden, leidend tot minder verkoopcijfers
+    \item Verspilling van tijd, geld en middelen door het creëren van originele inhoud die uiteindelijk elders wordt gedupliceerd
+    \item Impact op de website prestaties eventueel leidende tot een denial of service(een bron (site, toepassing, server) die niet beschikbaar is voor het doel waarvoor hij is ontworpen)
+    \item Misleidende dataverzameling door bezichtigingen van webscrapers (e.g websites dat datacollectie uitvoeren op hun gebruikers om te bepalen wat de meest/minst populaire artikels of producten zijn. Vervolgens  deze informatie gaan gebruiken om aanpassingen te maken naargelang hun behoeftes (bv. minst bezochte productpagina's gaan aanpassen om meer bezichtigingen te verkrijgen). Hierdoor kunnen de pagina's die regelmatig bezocht worden door een scraper onterecht beter scoren)
+\end{itemize}
+
+\subsection{Welke anti-webscrapingstechnie- ken bestaan er?}
+Er bestaan verscheidene technieken om web scraping tegen te gaan, een paar voorbeelden aangehaald door \autocite{10.1007/978-3-030-90016-8_4} zijn:
+\begin{itemize}
+    \item \textbf{Rate limiting}
+    \\
+    De snelheid van verzoeken op een website beperken
+    \item \textbf{Herkennen van automatisch netwerkverkeer}
+    \\
+    Deze techniek gaat zich eerder focussen naar het verwerken van informatie over het netwerkverkeer.
+    \item \textbf{Toegang weigeren aan bekende malicieuze identificatoren}
+    \\
+    \item \textbf{Honey potting}
+    \\
+    Strategisch geplante links of knoppen waardoor alleen bots ze kunnen vinden en gebruiken
+\end{itemize}
+
+\subsection{Het probleem met deze informatie?}
+In tegenstelling tot web scraping zelf zijn er zeer weinig academische bronnen te vinden over het beschermen van web applicaties tegen web scraping. Daarnaast zijn er nog verschillende technieken die niet aangehaald zijn in deze bronnen zoals:
+\\
+\begin{itemize}
+\item Dynamisch genereren van random id's en klassen. Door dit te randomiseren kan er geen gebruik gemaakt worden van bepaalde CSS selectors.
+\item Dynamisch div's encapsuleren zodat de boomstructuur telkens veranderd. Op deze manier zal er ook geen mogelijkheid zijn om gebruik te maken van DOM parsing.
+\item Tekst op de webpagina's tonen als een foto.
+\item Javascript gebruiken om de paginacontent te laden. Dit zorgt ervoor dat HTML parsers niet meer werken aangezien deze geen javascript runnen.
+\end{itemize}
+
+Het doel van dit onderzoek is dan ook om deze methodes uit te werken, te testen en de bevindingen te noteren. Daarnaast halen de bronnen ook niet aan hoe deze technieken een impact hebben op de gebruikers en de performance van de website.
+
+% Voor literatuurverwijzingen zijn er twee belangrijke commando's:
+% \autocite{KEY} => (Auteur, jaartal) Gebruik dit als de naam van de auteur
+%   geen onderdeel is van de zin.
+% \textcite{KEY} => Auteur (jaartal)  Gebruik dit als de auteursnaam wel een
+%   functie heeft in de zin (bv. ``Uit onderzoek door Doll & Hill (1954) bleek
+%   ...'')
+
+
+%---------- Methodologie ------------------------------------------------------
+\section{Methodologie}%
+\label{sec:methodologie}
+De eerste fase van het onderzoek gaat zich focussen op het opstellen van de demo-applicatie die verder in het onderzoek gebruikt wordt.
+\newline
+\break
+Bij de opvolgende fase gaat er een literatuurstudie over de verscheidene webscrapingstechnieken en de daarop gebaseerde frameworks en libraries plaatsvinden.Daarnaast zal ook de werking van al deze technieken getoond worden op de demo-applicatie.
+\newline
+\break
+Bij de derde fase zal er een empirisch onderstoek uitgevoerd
+worden over de effectiviteit van bestaande anti-webscrapingstechnieken. Hierbij zal er nagegaan worden hoe
+deze methoden standhouden tegen de werking van de meerdere concepten uit de vorige fase. De bedoeling is dan ook om al deze concepten uit te werken aan de hand van een proefopstelling.
+\newline
+\break
+In de laatste fase gaat er onderzocht worden hoe de technieken uit de derde fase de prestaties van de website, de gebruikerservaring en de SEO beïnvloeden.Hieruit zullen vervolgens conclusies getrokken worden om de vooraf opgestelde onderzoeksvragen te beantwoorden.
+
+\subsection{Technologieën}
+Webscrapers kunnen gemaakt worden met verscheidene tools en programmeertalen. In deze paper zal er gebruik gemaakt worden van Python om deze op te stellen. Voor de testomgeving zal er gebruik gemaakt worden van HTML, CSS en JavaScript om een website op te maken. 
+
+%---------- Verwachte resultaten ----------------------------------------------
+\section{Verwacht resultaat, conclusie}%
+\label{sec:verwachte_resultaten}
+Er bestaat een mogelijkheid om (automatische) web scraping volledig tegen te gaan al zal er waarschijnlijk een combinatie van verscheidene technieken voor moeten gebruikt worden. 
+Daarnaast zullen de meeste beschermingstechnieken op een of andere manier altijd wel een negatieve invloed hebben op de gebruikservaring. Bepaalde technieken zullen ook zorgen voor een slechtere leesbaarheid van de code en ook laadtijden, opslag, werking op mobiele apparaten en SEO ranking beïnvloeden.
+\newline 

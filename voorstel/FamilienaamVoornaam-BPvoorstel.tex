@@ -1,0 +1,84 @@
+%==============================================================================
+% Sjabloon onderzoeksvoorstel bachproef
+%==============================================================================
+% Gebaseerd op document class `hogent-article'
+% zie <https://github.com/HoGentTIN/latex-hogent-article>
+
+% Voor een voorstel in het Engels: voeg de documentclass-optie [english] toe.
+% Let op: kan enkel na toestemming van de bachelorproefcoördinator!
+\documentclass{hogent-article}
+
+% Invoegen bibliografiebestand
+\addbibresource{voorstel.bib}
+
+% Informatie over de opleiding, het vak en soort opdracht
+\studyprogramme{Professionele bachelor toegepaste informatica}
+\course{Bachelorproef}
+\assignmenttype{Onderzoeksvoorstel}
+% Voor een voorstel in het Engels, haal de volgende 3 regels uit commentaar
+% \studyprogramme{Bachelor of applied information technology}
+% \course{Bachelor thesis}
+% \assignmenttype{Research proposal}
+
+\academicyear{2022-2023} % TODO: pas het academiejaar aan
+
+% TODO: Werktitel
+\title{Onderzoek naar anti-webscrapingstechnieken en hun effectiviteit en gevolgen in de praktijk}
+
+% TODO: Studentnaam en emailadres invullen
+\author{Bjarne Van den Abbeele}
+\email{Bjarne.vandenabbeele@student.hogent.be}
+
+% TODO: Medestudent
+% Gaat het om een bachelorproef in samenwerking met een student in een andere
+% opleiding? Geef dan de naam en emailadres hier
+% \author{Yasmine Alaoui (naam opleiding)}
+% \email{yasmine.alaoui@student.hogent.be}
+
+% TODO: Geef de co-promotor op
+\supervisor[Co-promotor]{T. Aelbrecht (Hogent, \href{mailto:thomas.aelbrecht@hogent.be}{thomas.aelbrecht@hogent.be})}
+
+% Binnen welke specialisatierichting uit 3TI situeert dit onderzoek zich?
+% Kies uit deze lijst:
+%
+% - Mobile \& Enterprise development
+% - AI \& Data Engineering
+% - Functional \& Business Analysis
+% - System \& Network Administrator
+% - Mainframe Expert
+% - Als het onderzoek niet past binnen een van deze domeinen specifieer je deze
+%   zelf
+%
+\specialisation{Mobile \& Enterprise development}
+\keywords{Scheme, World Wide Web, $\lambda$-calculus}
+
+\specialisation{Web development}
+\keywords{Web scraping, Webapplicatieontwikkeling, Data-Bescherming, Data}
+
+\begin{document}
+
+\begin{abstract}
+De vraag naar data wordt met de jaren als maar groter, maar dit betekend niet dat alle bedrijven er dan ook voor open staan dat hun data makkelijk verkrijgbaar is voor anderen. Dit onderzoek is dan ook relevant omdat data zo een waardevolle rol speelt. Juist omdat dit zo waardevol is, wordt er dan ook veel belang gehecht aan het beschermen ervan tegen concurrenten. Maar de meest effectieve oplossing is niet altijd de beste, het is ook belangrijk dat deze implementaties geen al te negatieve effecten hebben tegenover de klanten en gebruikers. 
+\newline
+Daarom zal er in deze bachelorproef de effectiviteit onderzocht worden van verschillende beschermingstechnieken, ook wordt er getracht om alle nadelen van elke techniek in kaart te brengen om trend gebruikservaring, performance en SEO  zodat er een idee wordt gevormd rond de eventuele negatieve gevolgen. Hierdoor kan er een accuratere beslissing gemaakt worden over welke techniek(-en) er geïmplementeerd moeten worden naargelang de situatie van bedrijven. Dit zorgt dan weer voor een uitsparing van tijd en budget voor bepaalde bedrijven die de informatie op hun website wensen te beschermen.
+ \newline 
+\newline
+De initiële fase van het onderzoek bestaat uit het opzetten van een demo applicatie met behulp van Jhipster. Daarnaast wordt er in deze fase een studie gemaakt over de gebruikte methoden om data van websites te scrapen. 
+In de volgende fase zal de werking van de voorgaande methodes aangetoond worden met behulp van de vooraf opgestelde demo applicatie.
+In de opvolgende fase zal er een empirisch onderstoek uitgevoerd worden over de effectiviteit van bestaande anti-webscrapingstechnieken. Hierbij zal er nagegaan worden hoe deze methoden standhouden tegen de werking van de methodieken van de vorige fase.
+Vervolgens wordt er onderzocht hoe deze technieken invloed hebben op de werking van de website, de gebruikerservaring en search engine optimization.
+\newline
+Er wordt verwacht dat in combinatie van verschillende technieken web scraping zo goed als helemaal gestopt kan worden, Maar enkel als er andere zaken opgeofferd worden zoals gebruikservaring door bv. captcha's of toegang voor een echt persoon perongeluk blokkeren. Daarnaast wordt er ook verwacht dat bepaalde technieken een negatieve invloed gaan hebben op de SEO aangezien dit ook gebruik maakt van een web crawler die alle websitecontent gaat scrapen en indexeren en dit is net wat er geprobeerd wordt om tegen te houden.
+
+
+\end{abstract}
+
+\tableofcontents
+
+% De hoofdtekst van het voorstel zit in een apart bestand, zodat het makkelijk
+% kan opgenomen worden in de bijlagen van de bachelorproef zelf.
+\input{voorstel-inhoud}
+
+\printbibliography[heading=bibintoc]
+
+\end{document}

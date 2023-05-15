@@ -1,0 +1,53 @@
+%%=============================================================================
+%% Samenvatting
+%%=============================================================================
+
+% TODO: De "abstract" of samenvatting is een kernachtige (~ 1 blz. voor een
+% thesis) synthese van het document.
+%
+% Een goede abstract biedt een kernachtig antwoord op volgende vragen:
+%
+% 1. Waarover gaat de bachelorproef?
+% 2. Waarom heb je er over geschreven?
+% 3. Hoe heb je het onderzoek uitgevoerd?
+% 4. Wat waren de resultaten? Wat blijkt uit je onderzoek?
+% 5. Wat betekenen je resultaten? Wat is de relevantie voor het werkveld?
+%
+% Daarom bestaat een abstract uit volgende componenten:
+%
+% - inleiding + kaderen thema
+% - probleemstelling
+% - (centrale) onderzoeksvraag
+% - onderzoeksdoelstelling
+% - methodologie
+% - resultaten (beperk tot de belangrijkste, relevant voor de onderzoeksvraag)
+% - conclusies, aanbevelingen, beperkingen
+%
+% LET OP! Een samenvatting is GEEN voorwoord!
+
+%%---------- Nederlandse samenvatting -----------------------------------------
+%
+% TODO: Als je je bachelorproef in het Engels schrijft, moet je eerst een
+% Nederlandse samenvatting invoegen. Haal daarvoor onderstaande code uit
+% commentaar.
+% Wie zijn bachelorproef in het Nederlands schrijft, kan dit negeren, de inhoud
+% wordt niet in het document ingevoegd.
+
+\IfLanguageName{english}{%
+\selectlanguage{dutch}
+\chapter*{Samenvatting}
+\lipsum[1-4]
+\selectlanguage{english}
+}{}
+
+%%---------- Samenvatting -----------------------------------------------------
+% De samenvatting in de hoofdtaal van het document
+
+\chapter*{\IfLanguageName{dutch}{Samenvatting}{Abstract}}
+
+In deze bachelorproef wordt er onderzocht welke anti-webscraping technieken er onder meer bestaan en hoe effectief deze zijn voor het stoppen van webscraping. \newline 
+De initiële fase van het onderzoek bestaat uit een studie over de gebruikte methoden om data van websites te scrapen.
+In de opvolgende fase zal er een vergelijkende studie uitgevoerd worden over de effectiviteit van bestaande anti-webscrapings technieken. Hierbij zal er nagegaan worden hoe deze methoden standhouden tegen de werking van de methodieken van de vorige fase.
+Vervolgens wordt er onderzocht hoe deze technieken invloed hebben op de werking van de website en de gebruikerservaring.
+\newline
+Dit onderzoek is relevant omdat data een heel waardevolle rol speelt bij bedrijven. Juist omdat dit zo waardevol is, wordt er ook veel belang gehecht aan het beschermen ervan tegen concurrenten. Maar de meest effectieve oplossing is niet altijd de beste, het is ook belangrijk dat deze implementaties geen al te negatieve effecten hebben tegenover de klanten en gebruikers. Door de effectiviteit en impacten in kaart te brengen van verschillende beschermingstechnieken, kan er een accuratere beslissing gemaakt worden over welke techniek(-en) er geïmplementeerd moeten worden. Dit zorgt dan weer voor een uitsparing van tijd en budget voor bepaalde bedrijven die de  informatie op hun website wensen te beschermen.

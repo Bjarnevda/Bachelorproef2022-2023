@@ -1,0 +1,39 @@
+---
+  - name: Installeer Apache
+    hosts: all
+    tasks:
+      - name: Installeer Apache
+        yum:
+          name: httpd
+          state: latest
+      - name: Start Apache
+        service:
+          name: httpd
+          state: started
+
+  - name: Download git repo
+    hosts: all
+    tasks:
+      - name: Installeer git
+        yum:
+          name: git
+          state: latest
+      - name: Clone git repo in temp folder
+        git:
+          repo: https://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@github.com/Bjarnevda/Bachelorproef2022-2023.git
+          dest: /tmp/Bachelorproef2022-2023
+      - name: synchronize Website/Victoria_site files naar /var/www/html
+        synchronize:
+          src: /tmp/Bachelorproef2022-2023/Website/Victoria_site/
+          dest: /var/www/html
+          delete: yes
+      -name: set default apache page
+      - name: remove temp folder
+        file:
+          path: /tmp/Bachelorproef2022-2023
+          state: absent
+          force: yes
+      - name: refresh apache
+        service:
+          name: httpd
+          state: restarted

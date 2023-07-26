@@ -1,0 +1,5 @@
+# site.yml
+---
+- import_playbook: apache.yml
+- hosts: all
+  roles: []

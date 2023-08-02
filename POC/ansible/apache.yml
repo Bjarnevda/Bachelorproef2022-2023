@@ -25,7 +25,7 @@
   tasks:
     - name: httpd.conf from ansible to /etc/httpd/conf/httpd.conf (overwrite existing)
       synchronize:
-        src: /vagrant/ansible/httpd.conf
+        src: httpd.conf
         dest: /etc/httpd/conf/httpd.conf
         delete: no
 

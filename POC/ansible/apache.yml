@@ -25,7 +25,7 @@
   tasks:
     - name: httpd.conf from ansible to /etc/httpd/conf/httpd.conf (overwrite existing)
       synchronize:
-        src: httpd.conf
+        src: /vagrant/ansible/files/httpd.conf
         dest: /etc/httpd/conf/httpd.conf
         delete: no
 
@@ -40,6 +40,16 @@
       with_items:
         - 3000/tcp
         - 5000/tcp
+
+    - name: "install the Node app depndencies"
+      shell: sudo npm install
+      args:
+        chdir: /vagrant/ansible/nextjs_react/bp-site
+
+    - name: "build the Node app"
+      shell: sudo npm run build
+      args:
+        chdir: /vagrant/ansible/nextjs_react/bp-site
 
     - name: "Start the Node app"
       shell: nohup npm start &

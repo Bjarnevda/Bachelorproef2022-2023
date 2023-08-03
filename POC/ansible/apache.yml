@@ -34,25 +34,12 @@
         name: httpd
         state: restarted
 
-    - name: Find the PID(s) of the process using port 3000
-      shell: sudo netstat -tulnp | grep :3000
-      register: pid_output
-      ignore_errors: yes
-
-    - name: Kill the process with the found PID
-      shell: "kill {{ item }}"
-      with_items: "{{ pid_output.stdout_lines }}"
-      when: pid_output.stdout_lines
-
-    - name: Find the PID(s) of the process using port 5000
-      shell: sudo netstat -tulnp | grep :5000
-      register: pid_output2
-      ignore_errors: yes
-
-    - name: Kill the process with the found PID
-      shell: "kill {{ item }}"
-      with_items: "{{ pid_output2.stdout_lines }}"
-      when: pid_output2.stdout_lines
+    - name: Kill any running Node processes
+      shell: "sudo fuser -k {{ item }}"
+      failed_when: false # Ignore errors
+      with_items:
+        - 3000/tcp
+        - 5000/tcp
 
     - name: "Start the Node app"
       shell: nohup npm start &

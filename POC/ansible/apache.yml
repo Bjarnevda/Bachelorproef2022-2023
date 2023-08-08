@@ -1,57 +1,60 @@
 ---
-- name: Installeer Apache
+- name: Configure the server with Apache and Node
   hosts: all
   tasks:
-    - name: Installeer Apache
-      yum:
-        name: httpd
-        state: latest
-    - name: Start Apache
-      service:
+    - name: Install Apache and npm
+      ansible.builtin.package:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - httpd
+        - npm
+
+    - name: Ensure Apache is started and enabled
+      ansible.builtin.service:
         name: httpd
         state: started
+        enabled: true
 
-- name: installeer npm
-  hosts: all
-  tasks:
-    - name: installeer npm
-      yum:
-        name: npm
-        state: latest
-
-- name: setup Apache voor react website met express server
-  hosts: all
-  become: true
-  tasks:
-    - name: httpd.conf from ansible to /etc/httpd/conf/httpd.conf (overwrite existing)
-      synchronize:
-        src: /vagrant/ansible/files/httpd.conf
+    - name: Copy the Apache config file
+      ansible.builtin.copy:
+        src: httpd.conf
         dest: /etc/httpd/conf/httpd.conf
-        delete: no
+        owner: root
+        group: root
+        mode: '0644'
 
-    - name: refresh apache
-      service:
-        name: httpd
-        state: restarted
+    # - name: Kill any running Node processes
+    #   ansible.builtin.shell: "sudo fuser -k {{ item }}"
+    #   failed_when: false # Ignore errors
+    #   with_items:
+    #     - 3000/tcp
+    #     - 5000/tcp
 
-    - name: Kill any running Node processes
-      shell: "sudo fuser -k {{ item }}"
-      failed_when: false # Ignore errors
-      with_items:
-        - 3000/tcp
-        - 5000/tcp
+    # - name: "install the Node app dependencies"
+    #   ansible.builtin.shell: sudo npm install
+    #   args:
+    #     chdir: /vagrant/ansible/React/bp-site
 
-    - name: "install the Node app depndencies"
-      shell: sudo npm install
-      args:
-        chdir: /vagrant/ansible/React/bp-site
 
-    - name: "build the Node app"
-      shell: sudo npm run build
-      args:
-        chdir: /vagrant/ansible/React/bp-site
+# - name: setup Apache voor react website met express server
+#   hosts: all
+#   become: true
+#   tasks:
 
-    - name: "Start the Node app"
-      shell: nohup npm start &
-      args:
-        chdir: /vagrant/ansible/React/bp-site
+
+#     - name: refresh apache
+#       service:
+#         name: httpd
+#         state: restarted
+
+
+#     - name: "build the Node app"
+#       shell: sudo npm run build
+#       args:
+#         chdir: /vagrant/ansible/React/bp-site
+
+#     - name: "Start the Node app"
+#       shell: nohup npm start &
+#       args:
+#         chdir: /vagrant/ansible/React/bp-site

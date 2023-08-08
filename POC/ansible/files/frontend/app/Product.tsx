@@ -1,16 +1,6 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 
-declare global {
-  interface JQuery {
-    owlCarousel(options?: any): JQuery;
-  }
-
-  interface JQuery<TElement extends HTMLElement> {
-    modal(action: string): void;
-  }
-}
-
 interface StarRatingProps {
   numStars: number;
 }
@@ -69,8 +59,8 @@ const ProductModal: React.FC<ProductModalProps> = ({ piprops, onClose }) => {
         const dummyEvent: Partial<React.MouseEvent<HTMLButtonElement>> = {
           currentTarget: document.createElement("button"), // A dummy target element
           target: document.createElement("button"), // A dummy target element
-          preventDefault: () => {}, // A dummy preventDefault function
-          stopPropagation: () => {}, // A dummy stopPropagation function
+          preventDefault: () => { }, // A dummy preventDefault function
+          stopPropagation: () => { }, // A dummy stopPropagation function
           nativeEvent: new MouseEvent("click"), // A dummy native event
           relatedTarget: null,
         };

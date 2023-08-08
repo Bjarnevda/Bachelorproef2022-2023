@@ -1,5 +1,4 @@
 const express = require("express");
-const next = require("next");
 const app = express();
 
 const products = require("./dummyData");
@@ -35,8 +34,7 @@ app.get("/api/products/:productId", (req, res) => {
   }
 });
 
-app.get("/api/products/:page", (req, res) => {
-  const page = parseInt(req.params.page);
+app.get("/api/products", (req, res) => {
   const startIndex = parseInt(req.query.startIndex);
   const endIndex = parseInt(req.query.endIndex);
   const paginatedProducts = products.slice(startIndex, endIndex);

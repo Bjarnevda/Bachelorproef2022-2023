@@ -1,5 +1,102 @@
 # site.yml
 ---
-- import_playbook: apache.yml
-- hosts: all
-  roles: []
+- name: Configure the server with Docker, Apache and Node
+  hosts: all
+  vars:
+    pip_install_packages:
+      - requests          # Needed for the Ansible Docker modules
+  roles:
+    - geerlingguy.docker
+    - geerlingguy.pip
+  tasks:
+    - name: Install Apache and npm
+      ansible.builtin.package:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - httpd
+        - npm
+
+    - name: Ensure Apache is started and enabled
+      ansible.builtin.service:
+        name: httpd
+        state: started
+        enabled: true
+
+    - name: Copy the Apache config file
+      ansible.builtin.copy:
+        src: httpd.conf
+        dest: /etc/httpd/conf/httpd.conf
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Copy the source code
+      ansible.posix.synchronize:
+        src: "{{ item }}"
+        dest: /home/vagrant/
+        rsync_opts:
+          - "--exclude=node_modules"
+          - "--exclude=.next"
+      with_items:
+        - frontend
+        - backend
+
+    - name: Build the Docker images
+      community.docker.docker_image:
+        name: "{{ item }}"
+        state: present
+        source: build
+        build:
+          path: "/home/vagrant/{{ item }}"
+      with_items:
+        - frontend
+        - backend
+
+    - name: Start the Docker containers
+      community.docker.docker_container:
+        name: "{{ item.name }}"
+        image: "{{ item.name }}"
+        state: started
+        ports:
+          - "{{ item.port }}:{{ item.port }}"
+      with_items:
+        - name: frontend
+          port: 3000
+        - name: backend
+          port: 5000
+
+    # - name: Kill any running Node processes
+    #   ansible.builtin.shell: "sudo fuser -k {{ item }}"
+    #   failed_when: false # Ignore errors
+    #   with_items:
+    #     - 3000/tcp
+    #     - 5000/tcp
+
+    # - name: "install the Node app dependencies"
+    #   ansible.builtin.shell: sudo npm install
+    #   args:
+    #     chdir: /vagrant/ansible/React/bp-site
+
+
+# - name: setup Apache voor react website met express server
+#   hosts: all
+#   become: true
+#   tasks:
+
+
+#     - name: refresh apache
+#       service:
+#         name: httpd
+#         state: restarted
+
+
+#     - name: "build the Node app"
+#       shell: sudo npm run build
+#       args:
+#         chdir: /vagrant/ansible/React/bp-site
+
+#     - name: "Start the Node app"
+#       shell: nohup npm start &
+#       args:
+#         chdir: /vagrant/ansible/React/bp-site

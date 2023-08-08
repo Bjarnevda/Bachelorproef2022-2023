@@ -8,11 +8,11 @@
   ip: 192.168.56.10
   cpus: 2
   memory: 2048
-  forwarded_ports:
-    - host: 3000
-      guest: 3000
-    - host: 5000
-      guest: 5000
+  # forwarded_ports:
+  #   - host: 3000
+  #     guest: 3000
+  #   - host: 5000
+  #     guest: 5000
 # Example of a more elaborate host definition
 # - name: srv002
 #   box: bento/fedora-28

@@ -44,14 +44,14 @@
     - name: "install the Node app depndencies"
       shell: sudo npm install
       args:
-        chdir: /vagrant/ansible/bp-site
+        chdir: /vagrant/ansible/React/bp-site
 
     - name: "build the Node app"
       shell: sudo npm run build
       args:
-        chdir: /vagrant/ansible/bp-site
+        chdir: /vagrant/ansible/React/bp-site
 
     - name: "Start the Node app"
       shell: nohup npm start &
       args:
-        chdir: /vagrant/ansible//bp-site
+        chdir: /vagrant/ansible/React/bp-site

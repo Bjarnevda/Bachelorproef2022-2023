@@ -4,11 +4,11 @@ const app = express();
 const products = require("./dummyData");
 
 const customCors = (req, res, next) => {
-  const allowedOrigin = "http://localhost:3000";
+  const allowedOrigins = ["http://localhost:3000", "http://192.168.56.10:3000"];
 
   const origin = req.headers.origin;
 
-  if (origin === allowedOrigin) {
+  if (allowedOrigins.includes(origin)) {
     res.setHeader("Access-Control-Allow-Origin", origin);
     res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
     res.setHeader(
@@ -43,8 +43,6 @@ app.get("/api/products", (req, res) => {
     paginatedProducts,
     productsLength,
   };
-
-  console.log(res.origin);
 
   res.json(response);
 });

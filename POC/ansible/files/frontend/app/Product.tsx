@@ -95,7 +95,7 @@ const ProductModal: React.FC<ProductModalProps> = ({ piprops, onClose }) => {
       document.removeEventListener("click", handleBackdropClick);
       $(document).off("owlCarouselLoaded", initCarousel);
     };
-  }, []);
+  }, [onClose]);
 
   return (
     <div
@@ -354,7 +354,7 @@ const Product: React.FC<ProductItemProps> = (props) => {
   const showModal = async () => {
     try {
       const response = await fetch(
-        `http://localhost:5000/api/products/${props.id}`
+        `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/products/${props.id}`
       ); // Assuming you have an API endpoint for fetching product details
       const data = await response.json();
       setProductData(data);

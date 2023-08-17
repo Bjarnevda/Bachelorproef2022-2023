@@ -1,11 +1,7 @@
 "use client";
+import Paginate from "./Paginate";
 import ProductList, { ProductItemProps } from "./Product";
-import React, { useState, useEffect } from "react";
-declare global {
-  interface JQuery {
-    custom(options?: any): JQuery;
-  }
-}
+import React, { useState, useEffect, useCallback } from "react";
 
 export interface ShopProps {
   productsData: ProductItemProps[];
@@ -26,10 +22,10 @@ export default function Shop(shopData: ShopProps) {
     indexOfLastArticle - articlesPerPage
   );
 
-  const fetchProducts = async () => {
+  const fetchProducts = useCallback(async () => {
     try {
       const response = await fetch(
-        `http://localhost:5000/api/products?startIndex=${indexOfFirstArticle}&endIndex=${indexOfLastArticle}`
+        `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/products?startIndex=${indexOfFirstArticle}&endIndex=${indexOfLastArticle}`
       );
       const data = await response.json();
 
@@ -38,9 +34,8 @@ export default function Shop(shopData: ShopProps) {
     } catch (error) {
       console.error("Error fetching products:", error);
     }
-  };
+  }, [indexOfFirstArticle, indexOfLastArticle]);
 
-  //@@ts-ignore
   const initialShowArrowUp =
     typeof localStorage !== "undefined"
       ? localStorage.getItem("showArrowUp") || "false"
@@ -48,16 +43,16 @@ export default function Shop(shopData: ShopProps) {
 
   const [showArrowUp, setShowArrowUp] = useState(initialShowArrowUp === "true");
 
-  const handleScroll = () => {
-    if (window.scrollY >= 200) {
-      setShowArrowUp(true);
-    } else {
-      setShowArrowUp(false);
-    }
-  };
+
 
   useEffect(() => {
-    fetchProducts();
+    const handleScroll = () => {
+      if (window.scrollY >= 200) {
+        setShowArrowUp(true);
+      } else {
+        setShowArrowUp(false);
+      }
+    };
 
     // Add scroll event listener when the component mounts
     window.addEventListener("scroll", handleScroll);
@@ -70,26 +65,13 @@ export default function Shop(shopData: ShopProps) {
 
   useEffect(() => {
     fetchProducts();
-  }, [currentPage]);
-
-  useEffect(() => {
-    paginate(1);
-  }, [articlesPerPage]);
+  }, [fetchProducts]);
 
   useEffect(() => {
     // Save the state to local storage whenever it changes
     localStorage.setItem("showArrowUp", JSON.stringify(showArrowUp));
   }, [showArrowUp]);
 
-  const updateAmountOfArticles = (numberPerPage: number) => {
-    setArticlesPerPage(numberPerPage);
-  };
-
-  interface PaginateProps {
-    articlesPerPage: number;
-    totalArticles: number;
-    paginate: any;
-  }
 
   const paginate = (pageNumber: number) => {
     if (
@@ -107,62 +89,6 @@ export default function Shop(shopData: ShopProps) {
     else setindexOfFirstArticle(pageNumber * articlesPerPage - articlesPerPage);
 
     setCurrentPage(pageNumber);
-  };
-
-  const Paginate: React.FC<PaginateProps> = ({
-    articlesPerPage,
-    totalArticles,
-    paginate,
-  }) => {
-    const pageNumbers = [];
-
-    for (let i = 1; i <= Math.ceil(totalArticles / articlesPerPage); i++) {
-      pageNumbers.push(i);
-    }
-
-    return (
-      <div className="pagination-container">
-        <div className="pagination-wrapper float-left w-100">
-          <p>
-            Showing {indexOfFirstArticle + 1} to {indexOfLastArticle} out of{" "}
-            {totalArticles} ({Math.ceil(totalArticles / articlesPerPage)} Pages)
-          </p>
-          <nav aria-label="Page navigation example">
-            <ul className="pagination">
-              <li
-                className="page-item"
-                onClick={() => paginate(currentPage - 1)}
-              >
-                <a className="page-link">
-                  <span aria-hidden="true">&laquo;</span>
-                  <span className="sr-only">Previous</span>
-                </a>
-              </li>
-
-              {pageNumbers.map((number) => (
-                <li
-                  key={number}
-                  className="page-item"
-                  onClick={() => paginate(number)}
-                >
-                  <a className="page-link">{number}</a>
-                </li>
-              ))}
-
-              <li
-                className="page-item"
-                onClick={() => paginate(currentPage + 1)}
-              >
-                <a className="page-link">
-                  <span aria-hidden="true">&raquo;</span>
-                  <span className="sr-only">Next</span>
-                </a>
-              </li>
-            </ul>
-          </nav>
-        </div>
-      </div>
-    );
   };
 
   return (
@@ -295,7 +221,7 @@ export default function Shop(shopData: ShopProps) {
                         name="number"
                         id="number"
                         onChange={(val) =>
-                          updateAmountOfArticles(parseInt(val.target.value))
+                          setArticlesPerPage(parseInt(val.target.value))
                         }
                       >
                         <option value="9">9</option>
@@ -322,6 +248,9 @@ export default function Shop(shopData: ShopProps) {
                 articlesPerPage={articlesPerPage}
                 totalArticles={totalArticles}
                 paginate={paginate}
+                indexOfFirstArticle={indexOfFirstArticle}
+                indexOfLastArticle={indexOfLastArticle}
+                currentPage={currentPage}
               />
             </div>
 

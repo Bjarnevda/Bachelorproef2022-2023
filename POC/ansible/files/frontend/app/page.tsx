@@ -1,9 +1,11 @@
 import Shop from "./Shop";
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+
 const fetchProductsInitially = async () => {
   try {
     const response = await fetch(
-      'http://localhost:5000/api/products?startIndex=0&endIndex=9',
+      `${API_URL}/api/products?startIndex=0&endIndex=9`,
       {
         headers: {
           Origin: "http://localhost:3000",

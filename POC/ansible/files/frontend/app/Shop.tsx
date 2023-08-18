@@ -6,35 +6,27 @@ import React, { useState, useEffect, useCallback } from "react";
 export interface ShopProps {
   productsData: ProductItemProps[];
   productsLength: number;
+  page: number;
 }
 
 export default function Shop(shopData: ShopProps) {
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalArticles, setTotalArticles] = useState(shopData.productsLength);
-  const [articlesPerPage, setArticlesPerPage] = useState(9);
-  const [indexOfLastArticle, setIndexOfLastArticle] = useState(
-    currentPage * articlesPerPage
+  let currentPage = shopData.page;
+  const previousPage = Math.max(currentPage - 1, 1);
+  let totalArticles = shopData.productsLength;
+  let articlesPerPage = 9;
+  const nextPage = Math.min(
+    currentPage + 1,
+    Math.ceil(totalArticles / articlesPerPage)
   );
+  let indexOfLastArticle = currentPage * articlesPerPage;
 
-  const [products, setProducts] = useState(shopData.productsData);
+  let products = shopData.productsData;
 
-  const [indexOfFirstArticle, setindexOfFirstArticle] = useState(
-    indexOfLastArticle - articlesPerPage
-  );
+  let indexOfFirstArticle = indexOfLastArticle - articlesPerPage;
 
-  const fetchProducts = useCallback(async () => {
-    try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/products?startIndex=${indexOfFirstArticle}&endIndex=${indexOfLastArticle}`
-      );
-      const data = await response.json();
-
-      setProducts(data.paginatedProducts); // Assuming the API returns an array of products
-      setTotalArticles(data.productsLength);
-    } catch (error) {
-      console.error("Error fetching products:", error);
-    }
-  }, [indexOfFirstArticle, indexOfLastArticle]);
+  const updateAmountOfArticles = (numberPerPage: number) => {
+    articlesPerPage = numberPerPage;
+  };
 
   const initialShowArrowUp =
     typeof localStorage !== "undefined"
@@ -42,8 +34,6 @@ export default function Shop(shopData: ShopProps) {
       : "false"; // Provide a default value here
 
   const [showArrowUp, setShowArrowUp] = useState(initialShowArrowUp === "true");
-
-
 
   useEffect(() => {
     const handleScroll = () => {
@@ -64,32 +54,9 @@ export default function Shop(shopData: ShopProps) {
   }, []);
 
   useEffect(() => {
-    fetchProducts();
-  }, [fetchProducts]);
-
-  useEffect(() => {
     // Save the state to local storage whenever it changes
     localStorage.setItem("showArrowUp", JSON.stringify(showArrowUp));
   }, [showArrowUp]);
-
-
-  const paginate = (pageNumber: number) => {
-    if (
-      pageNumber < 1 ||
-      pageNumber > Math.ceil(totalArticles / articlesPerPage)
-    )
-      return;
-
-    if (pageNumber * articlesPerPage > totalArticles)
-      setIndexOfLastArticle(totalArticles);
-    else setIndexOfLastArticle(pageNumber * articlesPerPage);
-
-    if (pageNumber * articlesPerPage - articlesPerPage < 0)
-      setindexOfFirstArticle(1);
-    else setindexOfFirstArticle(pageNumber * articlesPerPage - articlesPerPage);
-
-    setCurrentPage(pageNumber);
-  };
 
   return (
     <div id="category" className="category">
@@ -221,7 +188,7 @@ export default function Shop(shopData: ShopProps) {
                         name="number"
                         id="number"
                         onChange={(val) =>
-                          setArticlesPerPage(parseInt(val.target.value))
+                          updateAmountOfArticles(parseInt(val.target.value))
                         }
                       >
                         <option value="9">9</option>
@@ -247,10 +214,11 @@ export default function Shop(shopData: ShopProps) {
               <Paginate
                 articlesPerPage={articlesPerPage}
                 totalArticles={totalArticles}
-                paginate={paginate}
                 indexOfFirstArticle={indexOfFirstArticle}
                 indexOfLastArticle={indexOfLastArticle}
                 currentPage={currentPage}
+                nextPage={nextPage}
+                previousPage={previousPage}
               />
             </div>
 

@@ -4,9 +4,9 @@
   hosts: all
   vars:
     pip_install_packages:
-      - requests          # Needed for the Ansible Docker modules
+      - requests # Needed for the Ansible Docker modules
     docker_users:
-      - vagrant           # Allow the vagrant user to run Docker commands
+      - vagrant # Allow the vagrant user to run Docker commands
   roles:
     - geerlingguy.docker
     - geerlingguy.pip
@@ -31,7 +31,7 @@
         dest: /etc/httpd/conf/httpd.conf
         owner: root
         group: root
-        mode: '0644'
+        mode: "0644"
 
     - name: Copy the source code
       ansible.posix.synchronize:
@@ -49,7 +49,7 @@
         dest: /home/vagrant/frontend/.env.local
         owner: vagrant
         group: vagrant
-        mode: '0644'
+        mode: "0644"
         content: |
           NEXT_PUBLIC_API_URL=http://192.168.56.10:5000
 

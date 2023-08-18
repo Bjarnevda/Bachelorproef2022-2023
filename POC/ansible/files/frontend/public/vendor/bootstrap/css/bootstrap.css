@@ -3323,7 +3323,7 @@ input[type="button"].btn-block {
 }
 
 .fade:not(.show) {
-  opacity: 0;
+  opacity: 100;
 }
 
 .collapse:not(.show) {
@@ -5802,11 +5802,11 @@ button.close {
 }
 
 .modal-open {
-  overflow: hidden;
+  overflow: scroll;
 }
 
 .modal-open .modal {
-  overflow-x: hidden;
+  overflow-x: scroll;
   overflow-y: auto;
 }
 
@@ -5817,7 +5817,7 @@ button.close {
   bottom: 0;
   left: 0;
   z-index: 1050;
-  display: none;
+  display: block;
   overflow: hidden;
   outline: 0;
 }
@@ -5863,6 +5863,7 @@ button.close {
 }
 
 .modal-content {
+  margin-top: 50%;
   position: relative;
   display: -ms-flexbox;
   display: flex;

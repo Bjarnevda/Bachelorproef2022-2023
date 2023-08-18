@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import React, { useState, useEffect, useRef } from "react";
 
 interface StarRatingProps {
@@ -44,32 +45,10 @@ export interface ProductItemProps {
 
 interface ProductModalProps {
   piprops: ProductItemProps;
-  onClose: React.MouseEventHandler<HTMLButtonElement>; // Callback to close the modal
 }
 
-const ProductModal: React.FC<ProductModalProps> = ({ piprops, onClose }) => {
-  const modalRef = useRef<HTMLDivElement>(null);
-
+export const ProductItem: React.FC<ProductModalProps> = ({ piprops }) => {
   useEffect(() => {
-    const handleBackdropClick = (event: MouseEvent) => {
-      if (
-        modalRef.current &&
-        !modalRef.current.contains(event.target as Node)
-      ) {
-        const dummyEvent: Partial<React.MouseEvent<HTMLButtonElement>> = {
-          currentTarget: document.createElement("button"), // A dummy target element
-          target: document.createElement("button"), // A dummy target element
-          preventDefault: () => { }, // A dummy preventDefault function
-          stopPropagation: () => { }, // A dummy stopPropagation function
-          nativeEvent: new MouseEvent("click"), // A dummy native event
-          relatedTarget: null,
-        };
-        onClose(dummyEvent as React.MouseEvent<HTMLButtonElement>);
-      }
-    };
-
-    document.addEventListener("click", handleBackdropClick);
-
     // Callback function to initialize the carousel
     function initCarousel() {
       $(".owl-carousel").owlCarousel({
@@ -92,34 +71,18 @@ const ProductModal: React.FC<ProductModalProps> = ({ piprops, onClose }) => {
 
     // Clean up event listeners when the component unmounts
     return () => {
-      document.removeEventListener("click", handleBackdropClick);
       $(document).off("owlCarouselLoaded", initCarousel);
     };
-  }, [onClose]);
+  }, []);
 
   return (
-    <div
-      className="modal fade product_view"
-      id="product_view"
-      tabIndex={-1}
-      role="dialog"
-      aria-hidden="false"
-    >
+    <div className="modal fade product_view">
       <div className="modal-dialog">
-        <div className="modal-content" ref={modalRef}>
+        <div className="modal-content">
           <div className="modal-header">
             <h4 className="modal-title w-100w-100w-100 font-weight-bold d-none">
               Quick view
             </h4>
-            <button
-              type="button"
-              className="close"
-              data-dismiss="modal"
-              aria-label="Close"
-              onClick={onClose}
-            >
-              <span aria-hidden="false">×</span>
-            </button>
           </div>
           <div className="modal-body">
             <div className="row">
@@ -337,132 +300,104 @@ const ProductModal: React.FC<ProductModalProps> = ({ piprops, onClose }) => {
 };
 
 const Product: React.FC<ProductItemProps> = (props) => {
-  const [isModalVisible, setModalVisible] = useState(false);
-  const [productData, setProductData] = useState(null);
-
-  useEffect(() => {
-    if (isModalVisible) {
-      $("#product_view").modal("show");
-    }
-  }, [isModalVisible]);
-
-  // Function to hide the modal
-  const hideModal: React.MouseEventHandler<HTMLButtonElement> = () => {
-    setModalVisible(false);
-  };
-
-  const showModal = async () => {
-    try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/products/${props.id}`
-      ); // Assuming you have an API endpoint for fetching product details
-      const data = await response.json();
-      setProductData(data);
-      setModalVisible(true);
-    } catch (error) {
-      console.error("Error fetching product data:", error);
-    }
-  };
-
-  const renderModal = () => {
-    if (!productData) {
-      return null; // Return null if data is not available yet
-    }
-
-    return <ProductModal onClose={hideModal} piprops={productData} />;
-  };
-
   return (
-    <div className="product-layouts">
-      <div className="product-thumb row">
-        <div className="image zoom col-xs-12 col-sm-3 col-md-2">
-          <a href="#" className="d-block position-relative" onClick={showModal}>
-            <img src={props.image1} alt="01" />
-            <img
-              src={props.image2}
-              alt="02"
-              className="second_image img-responsive"
-            />
-          </a>
-        </div>
-        <div className="thumb-description col-xs-12 col-sm-9 col-md-10 position-static text-left">
-          <div className="sort-title col-md-5 col-sm-7 float-left">
-            <div className="caption">
-              <h4 className="product-title text-capitalize">
-                <a
-                  href="#"
-                  className="d-block position-relative"
+    <div>
+      <div className="product-layouts">
+        <div className="product-thumb row">
+          <div className="image zoom col-xs-12 col-sm-3 col-md-2">
+            <Link
+              href={{
+                pathname: `/product_${props.id}`,
+              }}
+              className="d-block position-relative"
+            >
+              <img src={props.image1} alt="01" />
+              <img
+                src={props.image2}
+                alt="02"
+                className="second_image img-responsive"
+              />
+            </Link>
+          </div>
+          <div className="thumb-description col-xs-12 col-sm-9 col-md-10 position-static text-left">
+            <div className="sort-title col-md-5 col-sm-7 float-left">
+              <div className="caption">
+                <h4 className="product-title text-capitalize">
+                  <a
+                    href="#"
+                    className="d-block position-relative"
+                    data-toggle="modal"
+                    data-target="#product_view"
+                  >
+                    {props.title}
+                  </a>
+                </h4>
+              </div>
+
+              <div className="rating mb-10">
+                <StarRating numStars={props.rating} />
+              </div>
+              <div className="description mb-10">{props.description}</div>
+            </div>
+            <div className="price-main col-md-3 col-sm-5 float-left text-center text-sm-center text-xs-left">
+              <div className="price">
+                {props.originalprice !== props.price ? (
+                  <>
+                    <div className="regular-price">
+                      ${props.price.toFixed(2)}
+                    </div>
+                    <div className="old-price">
+                      ${props.originalprice.toFixed(2)}
+                    </div>
+                  </>
+                ) : (
+                  <div className="regular-price">${props.price.toFixed(2)}</div>
+                )}
+              </div>
+            </div>
+            <div className="button-wrapper col-md-4 col-sm-5 float-left text-center text-md-center text-sm-center text-xs-left">
+              <div className="button-group text-center">
+                {props.instock ? (
+                  <>
+                    <button
+                      type="button"
+                      className="btn btn-primary btn-cart"
+                      data-target="#cart-pop"
+                      data-toggle="modal"
+                      disabled={false}
+                    >
+                      <i className="material-icons">shopping_cart</i>
+                      <span>Add To Cart</span>
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <button
+                      type="button"
+                      className="btn btn-primary btn-cart"
+                      data-target="#cart-pop"
+                      data-toggle="modal"
+                      disabled={true}
+                    >
+                      <i className="material-icons">shopping_cart</i>
+                      <span>Out Of Stock</span>
+                    </button>
+                  </>
+                )}
+                <button
+                  type="button"
+                  className="btn btn-primary btn-quickview"
                   data-toggle="modal"
                   data-target="#product_view"
                 >
-                  {props.title}
-                </a>
-              </h4>
-            </div>
-
-            <div className="rating mb-10">
-              <StarRating numStars={props.rating} />
-            </div>
-            <div className="description mb-10">{props.description}</div>
-          </div>
-          <div className="price-main col-md-3 col-sm-5 float-left text-center text-sm-center text-xs-left">
-            <div className="price">
-              {props.originalprice !== props.price ? (
-                <>
-                  <div className="regular-price">${props.price.toFixed(2)}</div>
-                  <div className="old-price">
-                    ${props.originalprice.toFixed(2)}
-                  </div>
-                </>
-              ) : (
-                <div className="regular-price">${props.price.toFixed(2)}</div>
-              )}
-            </div>
-          </div>
-          <div className="button-wrapper col-md-4 col-sm-5 float-left text-center text-md-center text-sm-center text-xs-left">
-            <div className="button-group text-center">
-              {props.instock ? (
-                <>
-                  <button
-                    type="button"
-                    className="btn btn-primary btn-cart"
-                    data-target="#cart-pop"
-                    data-toggle="modal"
-                    disabled={false}
-                  >
-                    <i className="material-icons">shopping_cart</i>
-                    <span>Add To Cart</span>
-                  </button>
-                </>
-              ) : (
-                <>
-                  <button
-                    type="button"
-                    className="btn btn-primary btn-cart"
-                    data-target="#cart-pop"
-                    data-toggle="modal"
-                    disabled={true}
-                  >
-                    <i className="material-icons">shopping_cart</i>
-                    <span>Out Of Stock</span>
-                  </button>
-                </>
-              )}
-              <button
-                type="button"
-                className="btn btn-primary btn-quickview"
-                data-toggle="modal"
-                data-target="#product_view"
-              >
-                <i className="material-icons">visibility</i>
-                <span>Quick View</span>
-              </button>
+                  <i className="material-icons">visibility</i>
+                  <span>Quick View</span>
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </div>
-
-      {isModalVisible && renderModal()}
     </div>
   );
 };

@@ -4,16 +4,17 @@ interface PaginateProps {
   indexOfFirstArticle: number;
   indexOfLastArticle: number;
   currentPage: number;
-  paginate: any;
+  previousPage: number;
+  nextPage: number;
 }
 
 export default function Paginate({
   articlesPerPage,
   totalArticles,
-  paginate,
   indexOfFirstArticle,
   indexOfLastArticle,
-  currentPage,
+  previousPage,
+  nextPage,
 }: PaginateProps) {
   const pageNumbers = [];
 
@@ -30,31 +31,23 @@ export default function Paginate({
         </p>
         <nav aria-label="Page navigation example">
           <ul className="pagination">
-            <li
-              className="page-item"
-              onClick={() => paginate(currentPage - 1)}
-            >
-              <a className="page-link">
+            <li className="page-item">
+              <a className="page-link" href={`/?page=${previousPage}`}>
                 <span aria-hidden="true">&laquo;</span>
                 <span className="sr-only">Previous</span>
               </a>
             </li>
 
             {pageNumbers.map((number) => (
-              <li
-                key={number}
-                className="page-item"
-                onClick={() => paginate(number)}
-              >
-                <a className="page-link">{number}</a>
+              <li key={number} className="page-item">
+                <a className="page-link" href={`/?page=${number}`}>
+                  {number}
+                </a>
               </li>
             ))}
 
-            <li
-              className="page-item"
-              onClick={() => paginate(currentPage + 1)}
-            >
-              <a className="page-link">
+            <li className="page-item">
+              <a className="page-link" href={`/?page=${nextPage}`}>
                 <span aria-hidden="true">&raquo;</span>
                 <span className="sr-only">Next</span>
               </a>
@@ -64,4 +57,4 @@ export default function Paginate({
       </div>
     </div>
   );
-};
+}

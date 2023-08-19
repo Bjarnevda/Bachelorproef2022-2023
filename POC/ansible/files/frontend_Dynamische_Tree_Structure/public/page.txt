@@ -1,0 +1,689 @@
+import { ProductList } from "./Product";
+import { products } from "../public/dummyData.js";
+
+import styles from "../public/modulecss/index.module.css";
+
+const Home = () => <div className={styles.foo}>Hello World</div>;
+
+export default Home;
+
+export function Shop() {
+  return (
+    <div id="category" className="category">
+      <header className="header-area header-sticky text-center header-default">
+        <div className="header-main-sticky">
+          <div className="header-nav">
+            <div className="container ">
+              <div className="nav-left float-center">
+                <div className="ttheader-service">
+                  NOT A REAL STORE - DEMO FOR RESEARCH PURPOSES AND HAS NO
+                  FUNCTIONALITY
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="header-main-head">
+            <div className="header-main">
+              <div className="container">
+                <div className="header-left float-left d-flex d-lg-flex d-md-block d-xs-block">
+                  <div className="language-wrapper toggle">
+                    <button
+                      type="button"
+                      className="btn text-capitalize dropdown-toggle"
+                    >
+                      <img
+                        src="img/banner/en.png"
+                        alt="en"
+                        style={{ display: "inline" }}
+                      />
+                      <span>English</span>
+                    </button>
+                    <div id="language-dropdown" className="language">
+                      <ul>
+                        <li>
+                          <img src="img/banner/en.png" alt="en" />
+                          <span>English</span>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <div className="header-middle float-left">
+                  <div className="logo">
+                    <a href="index.html">
+                      <img src="img/logos/logo.png" alt="NatureCircle" />
+                    </a>
+                  </div>
+                </div>
+                <div className="header-right d-flex d-xs-block d-sm-flex justify-content-end float-right">
+                  <div className="cart-wrapper">
+                    <button type="button" className="btn">
+                      <i className="material-icons">shopping_cart</i>
+                      <span className="ttcount">0</span>
+                    </button>
+                    <div id="cart-dropdown" className="cart-menu">
+                      <ul className="w-100 float-left">
+                        <li>
+                          <table className="table table-striped">
+                            <tbody></tbody>
+                          </table>
+                        </li>
+                        <li>
+                          <table className="table price mb-30">
+                            <tbody>
+                              <tr>
+                                <td className="text-left">
+                                  <strong>Total</strong>
+                                </td>
+                                <td className="text-right">
+                                  <strong>$0</strong>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </li>
+                        <li className="buttons w-100 float-left">
+                          <form action="cart_page.html">
+                            <input
+                              className="btn pull-left mt_10 btn-primary btn-rounded w-100"
+                              type="submit"
+                            />
+                          </form>
+                          <form action="checkout_page.html">
+                            <input
+                              className="btn pull-right mt_10 btn-primary btn-rounded w-100"
+                              type="submit"
+                            />
+                          </form>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* main */}
+
+      <div className="main-content w-100 float-left">
+        <div className="container">
+          <div className="row">
+            <div
+              className="content-wrapper col-xl-9 col-lg-9 order-lg-2 Cwidth"
+              style={{
+                position: "relative",
+                overflow: "visible",
+                boxSizing: "border-box",
+                minHeight: "1px",
+                width: "75%",
+              }}
+            >
+              <div className="block-category mb-30 w-100 float-right">
+                <div className="category-cover">
+                  <img
+                    src="/img/banner/category-banner.png"
+                    alt="category-banner"
+                  />
+                </div>
+              </div>
+              <header className="product-grid-header d-flex d-xs-block d-sm-flex d-lg-flex w-100 float-left">
+                <div className="shop-results-wrapper d-flex d-sm-flex d-xs-block d-lg-flex justify-content-end col-md-9 col-sm-9 col-xs-12">
+                  <div className="shop-results d-flex align-items-center">
+                    <span>Show</span>
+                    <div className="shop-select">
+                      <select name="number" id="number">
+                        <option value="9">9</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                        <option value="75">75</option>
+                        <option value="100">100</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </header>
+              <div className="tab-content text-center products w-100 float-left">
+                <div
+                  className="tab-pane fade sort text-left active"
+                  id="sort-view"
+                  role="tabpanel"
+                >
+                  {/* productList */}
+                  <ProductList products={products} />
+                </div>
+              </div>
+              <div className="pagination-wrapper float-left w-100">
+                <p>Showing 1 to 9 of 11 (2 Pages)</p>
+                <nav aria-label="Page navigation example">
+                  <ul className="pagination">
+                    <li className="page-item">
+                      <a className="page-link" href="#" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                        <span className="sr-only">Previous</span>
+                      </a>
+                    </li>
+                    <li className="page-item active">
+                      <a className="page-link" href="#">
+                        1
+                      </a>
+                    </li>
+                    <li className="page-item">
+                      <a className="page-link" href="#">
+                        2
+                      </a>
+                    </li>
+                    <li className="page-item">
+                      <a className="page-link" href="#">
+                        3
+                      </a>
+                    </li>
+                    <li className="page-item">
+                      <a className="page-link" href="#" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                        <span className="sr-only">Next</span>
+                      </a>
+                    </li>
+                  </ul>
+                </nav>
+              </div>
+            </div>
+
+            <div
+              className="left-column sidebar col-xl-3 col-lg-3 order-lg-1 Lwidth"
+              style={{ width: "25%" }}
+            >
+              <div className="sidebar-filter left-sidebar w-100 float-left">
+                <div className="title">
+                  <a
+                    data-toggle="collapse"
+                    href="#sidebar-main"
+                    aria-expanded="false"
+                    aria-controls="sidebar-main"
+                    className="d-lg-none block-toggler"
+                  >
+                    Product Categories
+                  </a>
+                </div>
+                <div id="sidebar-main" className="sidebar-main collapse">
+                  <div className="sidebar-block categories">
+                    <h3 className="widget-title">
+                      <a
+                        data-toggle="collapse"
+                        href="#categoriesMenu"
+                        role="button"
+                        aria-expanded="true"
+                        aria-controls="categoriesMenu"
+                      >
+                        Categories
+                      </a>
+                    </h3>
+                    <div
+                      id="categoriesMenu"
+                      className="expand-lg collapse show"
+                    >
+                      <div className="nav nav-pills flex-column mt-4">
+                        {" "}
+                        <a
+                          href="#"
+                          className="nav-link d-flex justify-content-between mb-2 "
+                        >
+                          <span>Jackets</span>
+                          <span className="sidebar-badge"> 120</span>
+                        </a>
+                        <div className="nav nav-pills flex-column ml-3">
+                          <a href="#" className="nav-link mb-2">
+                            Lorem ipsum
+                          </a>
+                          <a href="#" className="nav-link mb-2">
+                            Donec vitae
+                          </a>
+                        </div>
+                        <a
+                          href="#"
+                          className="nav-link d-flex justify-content-between mb-2 active"
+                        >
+                          <span>Jeans &amp; chinos</span>
+                          <span className="sidebar-badge"> 55</span>
+                        </a>
+                        <div className="nav nav-pills flex-column ml-3">
+                          <a href="#" className="nav-link mb-2">
+                            Dolor
+                          </a>
+                          <a href="#" className="nav-link mb-2">
+                            Sit amet
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="sidebar-block price">
+                    <h3 className="widget-title">
+                      <a
+                        data-toggle="collapse"
+                        href="#price"
+                        role="button"
+                        aria-expanded="true"
+                        aria-controls="price"
+                      >
+                        Price
+                      </a>
+                    </h3>
+                    <div id="price" className="collapse show">
+                      <div className="price-inner">
+                        <label>Price range:</label>
+                        <input
+                          type="text"
+                          id="amount"
+                          style={{
+                            border: 0,
+                            fontWeight: "bold",
+                            background: "none",
+                          }}
+                        />
+                        <div id="slider-range"></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="sidebar-block color">
+                    <h3 className="widget-title">
+                      <a
+                        data-toggle="collapse"
+                        href="#color"
+                        role="button"
+                        aria-expanded="true"
+                        aria-controls="color"
+                      >
+                        Color
+                      </a>
+                    </h3>
+                    <div
+                      id="color"
+                      className="sidebar-widget-option-wrapper collapse show"
+                    >
+                      <div className="color-inner">
+                        <div className="sidebar-widget-option">
+                          <a
+                            href="#"
+                            style={{ backgroundColor: "#000000" }}
+                          ></a>
+                          Black <span>(4)</span>
+                        </div>
+                        <div className="sidebar-widget-option">
+                          <a
+                            href="#"
+                            style={{ backgroundColor: "#11426b" }}
+                          ></a>
+                          Blue <span>(3)</span>
+                        </div>
+                        <div className="sidebar-widget-option">
+                          <a
+                            href="#"
+                            style={{ backgroundColor: "#7d5a3c" }}
+                          ></a>
+                          Brown <span>(3)</span>
+                        </div>
+                        <div className="sidebar-widget-option">
+                          <a
+                            href="#"
+                            style={{ backgroundColor: "#ffffff" }}
+                          ></a>
+                          White <span>(3)</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="sidebar-block size">
+                    <h3 className="widget-title">
+                      <a
+                        data-toggle="collapse"
+                        href="#size"
+                        role="button"
+                        aria-expanded="true"
+                        aria-controls="size"
+                      >
+                        Size
+                      </a>
+                    </h3>
+                    <div
+                      id="size"
+                      className="sidebar-widget-option-wrapper collapse show"
+                    >
+                      <div className="size-inner">
+                        <div className="sidebar-widget-option">
+                          <input type="checkbox" id="size-1" />
+                          <label htmlFor="size-1">
+                            L <span>(4)</span>
+                          </label>
+                        </div>
+                        <div className="sidebar-widget-option">
+                          <input type="checkbox" id="size-2" />
+                          <label htmlFor="size-2">
+                            XS <span>(3)</span>
+                          </label>
+                        </div>
+                        <div className="sidebar-widget-option">
+                          <input type="checkbox" id="size-3" />
+                          <label htmlFor="size-3">
+                            S <span>(3)</span>
+                          </label>
+                        </div>
+                        <div className="sidebar-widget-option">
+                          <input type="checkbox" id="size-4" />
+                          <label htmlFor="size-4">
+                            Xl <span>(3)</span>
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="sidebar-left-banner left-sidebar w-100 float-left">
+                <div className="ttleftbanner">
+                  <a href="#">
+                    <img src="img/banner/left-banner.jpg" alt="left-banner" />
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Footer */}
+
+      <footer className="page-footer font-small footer-default">
+        {/* Copyright */}
+        <div className="footer-bottom-wrap">
+          <div className="container">
+            <div className="row">
+              <div className="footer-copyright text-center py-3">
+                © 2019 - Boostrap theme by store™
+              </div>
+            </div>
+          </div>
+        </div>
+        <a href="#" id="goToTop" title="Back to top" className="btn-primary">
+          <i className="material-icons arrow-up">keyboard_arrow_up</i>
+        </a>
+      </footer>
+
+      {/*  product view modal */}
+
+      <div
+        className="modal fade product_view"
+        id="product_view"
+        tabIndex={-1}
+        role="dialog"
+        aria-hidden="true"
+      >
+        <div className="modal-dialog">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h4 className="modal-title w-100w-100w-100 font-weight-bold d-none">
+                Quick view
+              </h4>
+              <button
+                type="button"
+                className="close"
+                data-dismiss="modal"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">×</span>
+              </button>
+            </div>
+            <div className="modal-body">
+              <div className="row">
+                <div className="col-md-6 left-columm">
+                  <div className="product-large-image tab-content">
+                    <div
+                      className="tab-pane active"
+                      id="product-1"
+                      role="tabpanel"
+                      aria-labelledby="product-tab-1"
+                    >
+                      <div className="single-img img-full">
+                        <a href="img/products/01.jpg">
+                          <img
+                            src="img/products/01.jpg"
+                            className="img-fluid"
+                            alt=""
+                          />
+                        </a>
+                      </div>
+                    </div>
+                    <div
+                      className="tab-pane"
+                      id="product-2"
+                      role="tabpanel"
+                      aria-labelledby="product-tab-2"
+                    >
+                      <div className="single-img">
+                        <a href="img/products/02.jpg">
+                          <img
+                            src="img/products/02.jpg"
+                            className="img-fluid"
+                            alt=""
+                          />
+                        </a>
+                      </div>
+                    </div>
+                    <div
+                      className="tab-pane"
+                      id="product-3"
+                      role="tabpanel"
+                      aria-labelledby="product-tab-3"
+                    >
+                      <div className="single-img">
+                        <a href="img/products/03.jpg">
+                          <img
+                            src="img/products/03.jpg"
+                            className="img-fluid"
+                            alt=""
+                          />
+                        </a>
+                      </div>
+                    </div>
+                    <div
+                      className="tab-pane"
+                      id="product-4"
+                      role="tabpanel"
+                      aria-labelledby="product-tab-4"
+                    >
+                      <div className="single-img">
+                        <a href="img/products/04.jpg">
+                          <img
+                            src="img/products/04.jpg"
+                            className="img-fluid"
+                            alt=""
+                          />
+                        </a>
+                      </div>
+                    </div>
+                    <div
+                      className="tab-pane"
+                      id="product-5"
+                      role="tabpanel"
+                      aria-labelledby="product-tab-5"
+                    >
+                      <div className="single-img">
+                        <a href="img/products/05.jpg">
+                          <img
+                            src="img/products/05.jpg"
+                            className="img-fluid"
+                            alt=""
+                          />
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="small-image-list float-left w-100">
+                    <div
+                      className="nav-add small-image-slider-single-product-tabstyle-3 owl-carousel"
+                      role="tablist"
+                    >
+                      <div className="single-small-image img-full">
+                        <a
+                          data-toggle="tab"
+                          id="product-tab-1"
+                          href="#product-1"
+                          className="img active"
+                        >
+                          <img
+                            src="img/products/01.jpg"
+                            className="img-fluid"
+                            alt=""
+                          />
+                        </a>
+                      </div>
+                      <div className="single-small-image img-full">
+                        <a
+                          data-toggle="tab"
+                          id="product-tab-2"
+                          href="#product-2"
+                          className="img"
+                        >
+                          <img
+                            src="img/products/02.jpg"
+                            className="img-fluid"
+                            alt=""
+                          />
+                        </a>
+                      </div>
+                      <div className="single-small-image img-full">
+                        <a
+                          data-toggle="tab"
+                          id="product-tab-3"
+                          href="#product-3"
+                          className="img"
+                        >
+                          <img
+                            src="img/products/03.jpg"
+                            className="img-fluid"
+                            alt=""
+                          />
+                        </a>
+                      </div>
+                      <div className="single-small-image img-full">
+                        <a
+                          data-toggle="tab"
+                          id="product-tab-4"
+                          href="#product-4"
+                          className="img"
+                        >
+                          <img
+                            src="img/products/04.jpg"
+                            className="img-fluid"
+                            alt=""
+                          />
+                        </a>
+                      </div>
+                      <div className="single-small-image img-full">
+                        <a
+                          data-toggle="tab"
+                          id="product-tab-5"
+                          href="#product-5"
+                          className="img"
+                        >
+                          <img
+                            src="img/products/05.jpg"
+                            className="img-fluid"
+                            alt=""
+                          />
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="col-md-6 product_content">
+                  <h4 className="product-title text-capitalize">
+                    aliquam quaerat voluptatem
+                  </h4>
+                  <div className="rating">
+                    <div className="product-ratings d-inline-block align-middle">
+                      <span className="fa fa-stack">
+                        <i className="material-icons">star</i>
+                      </span>
+                      <span className="fa fa-stack">
+                        <i className="material-icons">star</i>
+                      </span>
+                      <span className="fa fa-stack">
+                        <i className="material-icons">star</i>
+                      </span>
+                      <span className="fa fa-stack">
+                        <i className="material-icons off">star</i>
+                      </span>
+                      <span className="fa fa-stack">
+                        <i className="material-icons off">star</i>
+                      </span>
+                    </div>
+                  </div>
+                  <span className="description float-left w-100">
+                    Lorem Ipsum is simply dummy text of the printing and
+                    typesetting industry. Lorem Ipsum has been the
+                    industry&apos;s standard dummy text ever since the 1500s,
+                    when an unknown printer took a galley of type and scrambled
+                    it to make a type specimen book.
+                  </span>
+                  <h3 className="price float-left w-100">
+                    <span className="regular-price align-middle">$75.00</span>
+                    <span className="old-price align-middle">$60.00</span>
+                  </h3>
+
+                  <div className="product-variants float-left w-100">
+                    <div className="col-md-4 col-sm-6 col-xs-12 size-options d-flex align-items-center">
+                      <h5>Size:</h5>
+
+                      <select className="form-control" name="select">
+                        <option value="">Size</option>
+                        <option value="black">Medium</option>
+                        <option value="white">Large</option>
+                        <option value="gold">Small</option>
+                        <option value="rose gold">Extra large</option>
+                      </select>
+                    </div>
+                    <div className="color-option d-flex align-items-center">
+                      <h5>color :</h5>
+                      <ul className="color-categories">
+                        <li className="active">
+                          <a className="tt-pink" href="#" title="Pink"></a>
+                        </li>
+                        <li>
+                          <a className="tt-blue" href="#" title="Blue"></a>
+                        </li>
+                        <li>
+                          <a className="tt-yellow" href="#" title="Yellow"></a>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div className="btn-cart d-flex align-items-center float-left w-100">
+                    <h5>qty:</h5>
+                    <input type="number" />
+                    <button type="button" className="btn btn-primary">
+                      <i className="material-icons">shopping_cart</i> Add To
+                      Cart
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <script async src="js/jquery.min.js"></script>
+      <script async src="js/jquery-ui.min.js"></script>
+      <script async src="js/bootstrap.min.js"></script>
+      <script async src="js/owl.carousel.min.js"></script>
+      <script async src="js/parallax.js"></script>
+      <script async src="js/ResizeSensor.min.js"></script>
+      <script async src="js/masonry.pkgd.min.js"></script>
+      <script async src="js/imagesloaded.pkgd.min.js"></script>
+      <script async src="js/jquery.zoom.min.js"></script>
+      <script async src="js/custom.js"></script>
+    </div>
+  );
+}

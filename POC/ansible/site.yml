@@ -7,6 +7,16 @@
       - requests # Needed for the Ansible Docker modules
     docker_users:
       - vagrant # Allow the vagrant user to run Docker commands
+    frontend_sites:
+      - name: frontend
+        port: 3001
+        source_dir: frontend
+      - name: frontend_Dynamische_CSS_Selectors
+        port: 3002
+        source_dir: frontend_Dynamische_CSS_Selectors
+      - name: frontend_Dynamische_Tree_Structure
+        port: 3003
+        source_dir: frontend_Dynamische_Tree_Structure
   roles:
     - geerlingguy.docker
     - geerlingguy.pip
@@ -25,14 +35,6 @@
         state: started
         enabled: true
 
-    - name: Copy the Apache config file
-      ansible.builtin.copy:
-        src: httpd.conf
-        dest: /etc/httpd/conf/httpd.conf
-        owner: root
-        group: root
-        mode: "0644"
-
     - name: Copy the source code
       ansible.posix.synchronize:
         src: "{{ item }}"
@@ -42,16 +44,22 @@
           - "--exclude=.next"
       with_items:
         - frontend
+        - frontend_Dynamische_CSS_Selectors
+        - frontend_Dynamische_Tree_Structure
         - backend
 
     - name: Create an environment file
       ansible.builtin.copy:
-        dest: /home/vagrant/frontend/.env.local
+        dest: /home/vagrant/{{ item }}/.env.local
         owner: vagrant
         group: vagrant
         mode: "0644"
         content: |
           NEXT_PUBLIC_API_URL=http://192.168.56.10:5000
+      with_items:
+        - frontend
+        - frontend_Dynamische_CSS_Selectors
+        - frontend_Dynamische_Tree_Structure
 
     - name: Build the backend Docker image
       community.docker.docker_image:
@@ -70,21 +78,8 @@
         ports:
           - 5000:5000
 
-    - name: Build the frontend Docker image
-      community.docker.docker_image:
-        name: frontend
-        state: present
-        source: build
-        force_source: true # Force rebuild
-        build:
-          path: /home/vagrant/frontend
-          args:
-            apiUrl: http://192.168.56.10:5000
-
-    - name: Start the frontend container
-      community.docker.docker_container:
-        name: frontend
-        image: frontend
-        state: started
-        ports:
-          - 3000:3000
+    - name: Configure and start frontend Apache servers
+      ansible.builtin.include_tasks: frontend_apache.yml
+      with_items: "{{ frontend_sites }}"
+      loop_control:
+        loop_var: frontend_site

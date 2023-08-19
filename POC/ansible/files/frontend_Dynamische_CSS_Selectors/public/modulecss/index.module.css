@@ -1,0 +1,36 @@
+.product_title {
+  font: 400 18px/20px Playfair Display, Helvetica, sans-serif;
+  border-bottom: 1px solid #e5e5e5;
+  padding: 0 0 15px;
+  margin: 0 0 15px;
+}
+
+.off {
+  color: #666666 !important;
+}
+
+.description {
+  float: left;
+  width: 100%;
+  font: 400 13px/22px Poppins, Helvetica, sans-serif;
+  color: #666;
+}
+
+.article_number {
+}
+
+.regular_price {
+  font: 500 18px/20px Poppins, Helvetica, sans-serif;
+  color: #000;
+}
+
+.old_price {
+  font: 300 14px/20px Poppins, Helvetica, sans-serif;
+  color: #666;
+  text-decoration: line-through;
+}
+
+.img-fluid {
+  max-width: 100%;
+  height: auto;
+}

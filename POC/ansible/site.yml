@@ -1,6 +1,6 @@
 # site.yml
 ---
-- name: change cgroup and Reboot Control Node
+- name: Change cgroup and Reboot Control Node
   hosts: localhost
   connection: local
   tasks:
@@ -11,51 +11,20 @@
 
 - name: Configure the server with Docker, Apache and Node
   hosts: all
-  vars:
-    pip_install_packages:
-      - requests # Needed for the Ansible Docker modules
-    docker_users:
-      - vagrant # Allow the vagrant user to run Docker commands
-    container_sites:
-      - name: backend
-        port: 5000
-        source_dir: backend
-      - name: backend_anti
-        port: 5002
-        source_dir: backend_anti
-      - name: frontend
-        port: 3000
-        source_dir: frontend
-      - name: frontend_dynamische_css_selectors
-        port: 3001
-        source_dir: frontend_dynamische_css_selectors
-      - name: frontend_dynamische_tree_structure
-        port: 3002
-        source_dir: frontend_dynamische_tree_structure
-      - name: frontend_server_anti
-        port: 3003
-        source_dir: frontend_server_anti
   roles:
     - geerlingguy.docker
     - geerlingguy.pip
   tasks:
-    - name: change cgroup from 2 to 1 in grub file
+    - name: Change cgroup from 2 to 1 in grub file
       ansible.builtin.replace:
         path: /etc/default/grub
         regexp: 'GRUB_CMDLINE_LINUX="(.*)"'
         replace: 'GRUB_CMDLINE_LINUX="net.ifnames=0 biosdevname=0 crashkernel=1G-4G:192M,4G-64G:256M,64G-:512M resume=UUID=a5da4971-39e8-4ed4-b8cb-33c18b7ec024 systemd.unified_cgroup_hierarchy=0"'
-        backup: yes
+        backup: true
 
-    - name: update grub
+    - name: Update grub
       ansible.builtin.shell: grub2-mkconfig -o /boot/grub2/grub.cfg
-      become: yes
-
-    - name: Install Apache and npm
-      ansible.builtin.package:
-        name: "{{ item }}"
-        state: present
-      with_items:
-        - npm
+      become: true
 
     - name: Make sure docker is running
       ansible.builtin.service:
@@ -110,9 +79,6 @@
 
     - name: Configure and start containers
       ansible.builtin.include_tasks: containers.yml
-      with_items: "{{ container_sites }}"
-      loop_control:
-        loop_var: container
 
     - name: Configure and start resource monitoring
       ansible.builtin.include_tasks: monitoring.yml

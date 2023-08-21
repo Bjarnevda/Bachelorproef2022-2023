@@ -1,23 +1,26 @@
 # containers.yml
 ---
 - name: Build the Docker image
-  ansible.builtin.shell: docker build -t {{ container.name }} {{ container.name }}
-  args:
-    chdir: /home/vagrant
-  become: yes
+  community.docker.docker_image:
+    name: "{{ item.name }}"
+    build:
+      path: "/home/vagrant/{{ item.source_dir }}"
+    state: present
+    force_source: true
+    source: build
+  with_items: "{{ container_sites }}"
 
 - name: Stop existing backend frontend container if it exists
-  become: yes
-  command: docker stop {{ container.name }}_container
-  ignore_errors: yes
-
-- name: Remove existing backend frontend if it exists
-  become: yes
-  command: docker rm {{ container.name }}_container
-  ignore_errors: yes
+  community.docker.docker_container:
+    name: "{{ item.name }}_container"
+    state: absent
+  with_items: "{{ container_sites }}"
 
 - name: Start the Docker image
-  ansible.builtin.shell: docker run -d --name {{ container.name }}_container -p {{ container.port }}:{{ container.port }} {{ container.name }}
-  args:
-    chdir: /home/vagrant
-  become: yes
+  community.docker.docker_container:
+    name: "{{ item.name }}_container"
+    image: "{{ item.name }}"
+    state: started
+    ports:
+      - "{{ item.port }}:{{ item.port }}"
+  with_items: "{{ container_sites }}"

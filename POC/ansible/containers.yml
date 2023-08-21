@@ -1,0 +1,23 @@
+# containers.yml
+---
+- name: Build the Docker image
+  ansible.builtin.shell: docker build -t {{ container.name }} {{ container.name }}
+  args:
+    chdir: /home/vagrant
+  become: yes
+
+- name: Stop existing backend frontend container if it exists
+  become: yes
+  command: docker stop {{ container.name }}_container
+  ignore_errors: yes
+
+- name: Remove existing backend frontend if it exists
+  become: yes
+  command: docker rm {{ container.name }}_container
+  ignore_errors: yes
+
+- name: Start the Docker image
+  ansible.builtin.shell: docker run -d --name {{ container.name }}_container -p {{ container.port }}:{{ container.port }} {{ container.name }}
+  args:
+    chdir: /home/vagrant
+  become: yes

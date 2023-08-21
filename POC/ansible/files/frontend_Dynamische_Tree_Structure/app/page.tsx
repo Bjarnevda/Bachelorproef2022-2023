@@ -11,7 +11,7 @@ const fetchProducts = async (
       `${API_URL}/api/products?startIndex=${indexOfFirstArticle}&endIndex=${indexOfLastArticle}`,
       {
         headers: {
-          Origin: "http://localhost:3000",
+          Origin: "http://localhost:3002",
         },
       }
     );

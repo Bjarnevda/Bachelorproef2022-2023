@@ -1,0 +1,47 @@
+{
+  "name": "frontend",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 3003",
+    "build": "next build",
+    "start": "next start -p 3003",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@fontsource/playfair-display": "^5.0.5",
+    "@fontsource/poppins": "^5.0.5",
+    "@mui/icons-material": "^5.14.1",
+    "@mui/material": "^5.14.2",
+    "@types/node": "20.4.5",
+    "@types/react": "18.2.17",
+    "@types/react-dom": "18.2.7",
+    "autoprefixer": "10.4.14",
+    "axios": "^1.4.0",
+    "clsx": "^2.0.0",
+    "eslint": "8.46.0",
+    "eslint-config-next": "13.4.12",
+    "loader-utils": "^3.2.1",
+    "nanoid": "^4.0.2",
+    "next": "13.4.12",
+    "postcss": "^8.4.27",
+    "postcss-loader": "^7.3.3",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "sass": "^1.66.0",
+    "tailwindcss": "3.3.3",
+    "typescript": "5.1.6",
+    "uuid": "^9.0.0",
+    "webpack": "^5.88.2"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.22.9",
+    "@babel/node": "^7.22.6",
+    "@babel/preset-env": "^7.22.9",
+    "@types/jquery": "^3.5.16",
+    "@types/uuid": "^9.0.2",
+    "babel-plugin-transform-react-remove-prop": "^0.1.3"
+  }
+}

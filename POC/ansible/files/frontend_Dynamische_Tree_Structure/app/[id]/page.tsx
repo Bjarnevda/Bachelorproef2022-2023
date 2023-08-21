@@ -1,11 +1,13 @@
 import { ProductItem } from "../Product";
 import Header from "../Header";
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+
 const fetchProduct = async (id: number) => {
   try {
-    const response = await fetch(`http://localhost:5000/api/products/${id}`, {
+    const response = await fetch(`${API_URL}/api/products/${id}`, {
       headers: {
-        Origin: "http://localhost:3000",
+        Origin: "http://localhost:3002",
       },
     }); // Assuming you have an API endpoint for fetching product details
     return response.json();

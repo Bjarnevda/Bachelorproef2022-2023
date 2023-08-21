@@ -1,5 +1,14 @@
 # site.yml
 ---
+- name: change cgroup and Reboot Control Node
+  hosts: localhost
+  connection: local
+  tasks:
+    - name: Reboot the control node
+      ansible.builtin.reboot:
+        reboot_timeout: 300
+        msg: "Ansible is rebooting the system"
+
 - name: Configure the server with Docker, Apache and Node
   hosts: all
   vars:
@@ -7,31 +16,50 @@
       - requests # Needed for the Ansible Docker modules
     docker_users:
       - vagrant # Allow the vagrant user to run Docker commands
-    frontend_sites:
+    container_sites:
+      - name: backend
+        port: 5000
+        source_dir: backend
+      - name: backend_anti
+        port: 5002
+        source_dir: backend_anti
       - name: frontend
-        port: 3001
+        port: 3000
         source_dir: frontend
-      - name: frontend_Dynamische_CSS_Selectors
+      - name: frontend_dynamische_css_selectors
+        port: 3001
+        source_dir: frontend_dynamische_css_selectors
+      - name: frontend_dynamische_tree_structure
         port: 3002
-        source_dir: frontend_Dynamische_CSS_Selectors
-      - name: frontend_Dynamische_Tree_Structure
+        source_dir: frontend_dynamische_tree_structure
+      - name: frontend_server_anti
         port: 3003
-        source_dir: frontend_Dynamische_Tree_Structure
+        source_dir: frontend_server_anti
   roles:
     - geerlingguy.docker
     - geerlingguy.pip
   tasks:
+    - name: change cgroup from 2 to 1 in grub file
+      ansible.builtin.replace:
+        path: /etc/default/grub
+        regexp: 'GRUB_CMDLINE_LINUX="(.*)"'
+        replace: 'GRUB_CMDLINE_LINUX="net.ifnames=0 biosdevname=0 crashkernel=1G-4G:192M,4G-64G:256M,64G-:512M resume=UUID=a5da4971-39e8-4ed4-b8cb-33c18b7ec024 systemd.unified_cgroup_hierarchy=0"'
+        backup: yes
+
+    - name: update grub
+      ansible.builtin.shell: grub2-mkconfig -o /boot/grub2/grub.cfg
+      become: yes
+
     - name: Install Apache and npm
       ansible.builtin.package:
         name: "{{ item }}"
         state: present
       with_items:
-        - httpd
         - npm
 
-    - name: Ensure Apache is started and enabled
+    - name: Make sure docker is running
       ansible.builtin.service:
-        name: httpd
+        name: docker
         state: started
         enabled: true
 
@@ -43,10 +71,13 @@
           - "--exclude=node_modules"
           - "--exclude=.next"
       with_items:
-        - frontend
-        - frontend_Dynamische_CSS_Selectors
-        - frontend_Dynamische_Tree_Structure
         - backend
+        - backend_anti
+        - frontend
+        - frontend_dynamische_css_selectors
+        - frontend_dynamische_tree_structure
+        - frontend_server_anti
+        - grafana-conf.ini
 
     - name: Create an environment file
       ansible.builtin.copy:
@@ -58,28 +89,30 @@
           NEXT_PUBLIC_API_URL=http://192.168.56.10:5000
       with_items:
         - frontend
-        - frontend_Dynamische_CSS_Selectors
-        - frontend_Dynamische_Tree_Structure
+        - frontend_dynamische_css_selectors
+        - frontend_dynamische_tree_structure
 
-    - name: Build the backend Docker image
-      community.docker.docker_image:
-        name: backend
-        state: present
-        source: build
-        force_source: true # Force rebuild
-        build:
-          path: /home/vagrant/backend
+    - name: Create an environment file
+      ansible.builtin.copy:
+        dest: /home/vagrant/{{ item }}/.env.local
+        owner: vagrant
+        group: vagrant
+        mode: "0644"
+        content: |
+          NEXT_PUBLIC_API_URL=http://192.168.56.10:5002
+      with_items:
+        - frontend_server_anti
 
-    - name: Start the backend container
-      community.docker.docker_container:
-        name: backend
-        image: backend
-        state: started
-        ports:
-          - 5000:5000
+    - name: Restart docker
+      ansible.builtin.service:
+        name: docker
+        state: restarted
 
-    - name: Configure and start frontend Apache servers
-      ansible.builtin.include_tasks: frontend_apache.yml
-      with_items: "{{ frontend_sites }}"
+    - name: Configure and start containers
+      ansible.builtin.include_tasks: containers.yml
+      with_items: "{{ container_sites }}"
       loop_control:
-        loop_var: frontend_site
+        loop_var: container
+
+    - name: Configure and start resource monitoring
+      ansible.builtin.include_tasks: monitoring.yml

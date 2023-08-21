@@ -49,30 +49,32 @@ interface ProductModalProps {
 
 export const ProductItem: React.FC<ProductModalProps> = ({ piprops }) => {
   useEffect(() => {
-    // Callback function to initialize the carousel
-    function initCarousel() {
-      $(".owl-carousel").owlCarousel({
-        // Add your carousel options here
-        loop: false,
-        items: 3,
-        nav: true,
-        dots: false,
-      });
-    }
+    document.addEventListener("DOMContentLoaded", function () {
+      // Callback function to initialize the carousel
+      function initCarousel() {
+        $(".owl-carousel").owlCarousel({
+          // Add your carousel options here
+          loop: false,
+          items: 3,
+          nav: true,
+          dots: false,
+        });
+      }
 
-    // Check if the owl.carousel script is loaded
-    if (typeof $.fn.owlCarousel === "function") {
-      // If loaded, initialize the carousel
-      initCarousel();
-    } else {
-      // If not loaded, wait for the script to load
-      $(document).on("owlCarouselLoaded", initCarousel);
-    }
+      // Check if the owl.carousel script is loaded
+      if (typeof $.fn.owlCarousel === "function") {
+        // If loaded, initialize the carousel
+        initCarousel();
+      } else {
+        // If not loaded, wait for the script to load
+        $(document).on("owlCarouselLoaded", initCarousel);
+      }
 
-    // Clean up event listeners when the component unmounts
-    return () => {
-      $(document).off("owlCarouselLoaded", initCarousel);
-    };
+      // Clean up event listeners when the component unmounts
+      return () => {
+        $(document).off("owlCarouselLoaded", initCarousel);
+      };
+    });
   }, []);
 
   function getRandomInt(min: number, max: number): number {

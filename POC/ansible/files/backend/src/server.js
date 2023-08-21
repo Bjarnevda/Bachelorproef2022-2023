@@ -4,7 +4,11 @@ const app = express();
 const products = require("./dummyData");
 
 const customCors = (req, res, next) => {
-  const allowedOrigins = ["http://localhost:3000", "http://192.168.56.10:3000"];
+  const allowedOrigins = [
+    "http://localhost:3000",
+    "http://localhost:3001",
+    "http://localhost:3002",
+  ];
 
   const origin = req.headers.origin;
 
@@ -18,7 +22,9 @@ const customCors = (req, res, next) => {
     next();
   } else {
     console.log(res.origin);
-    res.status(403).json({ message: "Access Forbidden" });
+    res
+      .status(403)
+      .json({ message: "Access Forbidden: " + res.origin + " not allowed" });
   }
 };
 

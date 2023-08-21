@@ -1,0 +1,109 @@
+# containers.yml
+---
+- name: pull node-exporter
+  ansible.builtin.shell: docker pull prom/node-exporter
+
+- name: pull prometheus
+  ansible.builtin.shell: docker pull prom/prometheus
+
+- name: pull grafana
+  ansible.builtin.shell: docker pull grafana/grafana
+
+- name: pull redis
+  ansible.builtin.shell: docker pull redis
+
+- name: Stop existing redis container if it exists
+  become: yes
+  command: docker stop redis
+  ignore_errors: yes
+
+- name: Remove existing redis if it exists
+  become: yes
+  command: docker rm redis
+  ignore_errors: yes
+
+- name: run redis
+  ansible.builtin.shell: docker run -d --name redis -p 6379:6379 redis
+
+- name: Stop existing cadvisor container if it exists
+  become: yes
+  command: docker stop cadvisor
+  ignore_errors: yes
+
+- name: Remove existing cadvisor if it exists
+  become: yes
+  command: docker rm cadvisor
+  ignore_errors: yes
+
+- name: run cadvisor
+  ansible.builtin.shell: docker run -d --name=cadvisor --privileged=true -v /:/rootfs:ro -v /var/run:/var/run:rw -v /sys:/sys:ro -v /var/lib/docker/:/var/lib/docker:ro -p 8080:8080 google/cadvisor:latest
+
+- name: Stop existing grafana container if it exists
+  become: yes
+  command: docker stop grafana
+  ignore_errors: yes
+
+- name: Remove existing grafana if it exists
+  become: yes
+  command: docker rm grafana
+  ignore_errors: yes
+
+- name: run grafana
+  ansible.builtin.shell: docker run -d --name grafana -p 3010:3010 -v  /home/vagrant/grafana-conf.ini:/etc/grafana/grafana.ini grafana/grafana
+
+- name: Stop existing node-exporter container if it exists
+  become: yes
+  command: docker stop node-exporter
+  ignore_errors: yes
+
+- name: Remove existing node-exporter if it exists
+  become: yes
+  command: docker rm node-exporter
+  ignore_errors: yes
+
+- name: run node exporter
+  ansible.builtin.shell: docker run -d --net="host" --pid="host" -v "/:/host:ro,rslave"  prom/node-exporter --path.rootfs=/host
+  become: yes
+
+- name: Stop existing prometheus container if it exists
+  become: yes
+  command: docker stop prometheus
+  ignore_errors: yes
+
+- name: Remove existing prometheus if it exists
+  become: yes
+  command: docker rm prometheus
+  ignore_errors: yes
+
+- name: Create prometheus config directory
+  ansible.builtin.file:
+    path: /home/vagrant/prom
+    state: directory
+    owner: vagrant
+    group: vagrant
+    mode: "0755"
+
+- name: Copy prometheus config
+  ansible.builtin.copy:
+    dest: /home/vagrant/prom/prometheus.yml
+    owner: vagrant
+    group: vagrant
+    mode: "0644"
+    content: |
+      global:
+        scrape_interval: 1s
+        external_labels:
+          monitor: 'node'
+      scrape_configs:
+        - job_name: 'prometheus'
+          static_configs:
+            - targets: ['192.168.56.10:9090']
+        - job_name: 'node-exporter'
+          static_configs:
+            - targets: ['192.168.56.10:9100']
+        - job_name: 'cadvisor'
+          static_configs:
+            - targets: ["192.168.56.10:8080"]
+
+- name: run prometheus
+  ansible.builtin.shell: docker run -d --name prometheus -p 9090:9090 -v /home/vagrant/prom/prometheus.yml:/etc/prometheus/prometheus.yml prom/prometheus

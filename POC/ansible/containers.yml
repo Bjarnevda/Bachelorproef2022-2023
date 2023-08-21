@@ -10,12 +10,6 @@
     source: build
   with_items: "{{ container_sites }}"
 
-- name: Stop existing backend frontend container if it exists
-  community.docker.docker_container:
-    name: "{{ item.name }}_container"
-    state: absent
-  with_items: "{{ container_sites }}"
-
 - name: Start the Docker image
   community.docker.docker_container:
     name: "{{ item.name }}_container"

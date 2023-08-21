@@ -1,37 +1,11 @@
 # site.yml
 ---
-- name: Change cgroup and Reboot Control Node
-  hosts: localhost
-  connection: local
-  tasks:
-    - name: Reboot the control node
-      ansible.builtin.reboot:
-        reboot_timeout: 300
-        msg: "Ansible is rebooting the system"
-
-- name: Configure the server with Docker, Apache and Node
+- name: Configure the Proof of Concept
   hosts: all
   roles:
     - geerlingguy.docker
     - geerlingguy.pip
   tasks:
-    - name: Change cgroup from 2 to 1 in grub file
-      ansible.builtin.replace:
-        path: /etc/default/grub
-        regexp: 'GRUB_CMDLINE_LINUX="(.*)"'
-        replace: 'GRUB_CMDLINE_LINUX="net.ifnames=0 biosdevname=0 crashkernel=1G-4G:192M,4G-64G:256M,64G-:512M resume=UUID=a5da4971-39e8-4ed4-b8cb-33c18b7ec024 systemd.unified_cgroup_hierarchy=0"'
-        backup: true
-
-    - name: Update grub
-      ansible.builtin.shell: grub2-mkconfig -o /boot/grub2/grub.cfg
-      become: true
-
-    - name: Make sure docker is running
-      ansible.builtin.service:
-        name: docker
-        state: started
-        enabled: true
-
     - name: Copy the source code
       ansible.posix.synchronize:
         src: "{{ item }}"
@@ -71,11 +45,6 @@
           NEXT_PUBLIC_API_URL=http://192.168.56.10:5002
       with_items:
         - frontend_server_anti
-
-    - name: Restart docker
-      ansible.builtin.service:
-        name: docker
-        state: restarted
 
     - name: Configure and start containers
       ansible.builtin.include_tasks: containers.yml

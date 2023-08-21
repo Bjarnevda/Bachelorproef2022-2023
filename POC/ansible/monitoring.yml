@@ -1,81 +1,65 @@
 # monitoring.yml
 ---
-- name: pull node-exporter
-  ansible.builtin.shell: docker pull prom/node-exporter
+- name: Pull Docker images for monitoring
+  community.docker.docker_image:
+    name: "{{ item }}"
+    source: pull
+  with_items:
+    - prom/node-exporter
+    - prom/prometheus
+    - grafana/grafana
+    - redis
+    - gcr.io/cadvisor/cadvisor
 
-- name: pull prometheus
-  ansible.builtin.shell: docker pull prom/prometheus
+- name: Make sure Redis container is started
+  community.docker.docker_container:
+    name: redis
+    image: redis
+    state: started
+    ports:
+      - "6379:6379"
 
-- name: pull grafana
-  ansible.builtin.shell: docker pull grafana/grafana
+- name: Make sure Cadvisor container is started
+  community.docker.docker_container:
+    name: cadvisor
+    image: gcr.io/cadvisor/cadvisor
+    state: started
+    privileged: true
+    ports:
+      - "8080:8080"
+    devices:
+      - "/dev/kmsg:/dev/kmsg"
+    volumes:
+      - "/:/rootfs:ro"
+      - "/var/run:/var/run:rw"
+      - "/sys:/sys:ro"
+      - "/var/lib/docker/:/var/lib/docker:ro"
+      - "/dev/disk/:/dev/disk:ro"
+      - "/cgroup:/cgroup:ro"
 
-- name: pull redis
-  ansible.builtin.shell: docker pull redis
+- name: Make sure Grafana container is started
+  community.docker.docker_container:
+    name: grafana
+    image: grafana/grafana
+    state: started
+    ports:
+      - "3010:3010"
+    volumes:
+      - "/home/vagrant/grafana-conf.ini:/etc/grafana/grafana.ini"
 
-- name: Stop existing redis container if it exists
-  become: yes
-  command: docker stop redis
-  ignore_errors: yes
+- name: Make sure Node Exporter container is started
+  community.docker.docker_container:
+    name: node-exporter
+    image: prom/node-exporter
+    state: started
+    network_mode: host
+    ports:
+      - "9100:9100"
+    volumes:
+      - "/:/host:ro,rslave"
+    command: --path.rootfs=/host
 
-- name: Remove existing redis if it exists
-  become: yes
-  command: docker rm redis
-  ignore_errors: yes
-
-- name: run redis
-  ansible.builtin.shell: docker run -d --name redis -p 6379:6379 redis
-
-- name: Stop existing cadvisor container if it exists
-  become: yes
-  command: docker stop cadvisor
-  ignore_errors: yes
-
-- name: Remove existing cadvisor if it exists
-  become: yes
-  command: docker rm cadvisor
-  ignore_errors: yes
-
-- name: run cadvisor
-  ansible.builtin.shell: docker run -d --name=cadvisor --privileged=true -v /:/rootfs:ro -v /var/run:/var/run:rw -v /sys:/sys:ro -v /var/lib/docker/:/var/lib/docker:ro -p 8080:8080 google/cadvisor:latest
-
-- name: Stop existing grafana container if it exists
-  become: yes
-  command: docker stop grafana
-  ignore_errors: yes
-
-- name: Remove existing grafana if it exists
-  become: yes
-  command: docker rm grafana
-  ignore_errors: yes
-
-- name: run grafana
-  ansible.builtin.shell: docker run -d --name grafana -p 3010:3010 -v  /home/vagrant/grafana-conf.ini:/etc/grafana/grafana.ini grafana/grafana
-
-- name: Stop existing node-exporter container if it exists
-  become: yes
-  command: docker stop node-exporter
-  ignore_errors: yes
-
-- name: Remove existing node-exporter if it exists
-  become: yes
-  command: docker rm node-exporter
-  ignore_errors: yes
-
-- name: run node exporter
-  ansible.builtin.shell: docker run -d --net="host" --pid="host" -v "/:/host:ro,rslave"  prom/node-exporter --path.rootfs=/host
-  become: yes
-
-- name: Stop existing prometheus container if it exists
-  become: yes
-  command: docker stop prometheus
-  ignore_errors: yes
-
-- name: Remove existing prometheus if it exists
-  become: yes
-  command: docker rm prometheus
-  ignore_errors: yes
-
-- name: Create prometheus config directory
+- name: Create Prometheus configuration directory
   ansible.builtin.file:
     path: /home/vagrant/prom
     state: directory
@@ -83,7 +67,7 @@
     group: vagrant
     mode: "0755"
 
-- name: Copy prometheus config
+- name: Write prometheus configuration file
   ansible.builtin.copy:
     dest: /home/vagrant/prom/prometheus.yml
     owner: vagrant
@@ -105,5 +89,12 @@
           static_configs:
             - targets: ["192.168.56.10:8080"]
 
-- name: run prometheus
-  ansible.builtin.shell: docker run -d --name prometheus -p 9090:9090 -v /home/vagrant/prom/prometheus.yml:/etc/prometheus/prometheus.yml prom/prometheus
+- name: Make sure Prometheus container is started
+  community.docker.docker_container:
+    name: prometheus
+    image: prom/prometheus
+    state: started
+    ports:
+      - "9090:9090"
+    volumes:
+      - "/home/vagrant/prom/prometheus.yml:/etc/prometheus/prometheus.yml"

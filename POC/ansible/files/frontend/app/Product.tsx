@@ -48,22 +48,26 @@ interface ProductModalProps {
 }
 
 export const ProductItem: React.FC<ProductModalProps> = ({ piprops }) => {
-  useEffect(() => {
-    document.addEventListener("DOMContentLoaded", function () {
-      // Callback function to initialize the carousel
-      function initCarousel() {
-        $(".owl-carousel").owlCarousel({
-          // Add your carousel options here
-          loop: false,
-          items: 3,
-          nav: true,
-          dots: false,
-        });
-      }
+  const [loadContent, setLoadContent] = useState(false);
 
-      // Check if the owl.carousel script is loaded
+  useEffect(() => {
+    setLoadContent(true);
+  }, []);
+
+  useEffect(() => {
+    // Initialize the carousel once isContentLoaded becomes true
+    function initCarousel() {
+      $(".owl-carousel").owlCarousel({
+        // Add your carousel options here
+        loop: false,
+        items: 3,
+        nav: true,
+        dots: false,
+      });
+    }
+    if (loadContent) {
       if (typeof $.fn.owlCarousel === "function") {
-        // If loaded, initialize the carousel
+        // If owlCarousel is loaded, initialize the carousel
         initCarousel();
       } else {
         // If not loaded, wait for the script to load
@@ -74,8 +78,8 @@ export const ProductItem: React.FC<ProductModalProps> = ({ piprops }) => {
       return () => {
         $(document).off("owlCarouselLoaded", initCarousel);
       };
-    });
-  }, []);
+    }
+  }, [loadContent]);
 
   return (
     <div className="modal fade product_view">

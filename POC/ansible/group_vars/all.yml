@@ -3,6 +3,9 @@
 ---
 pip_install_packages:
   - requests # Needed for the Ansible Docker modules
+  - docker-py
+  - docker
+  - urllib3==1.26.16 # downgrade urllib3 to avoid clashes with requestswhen building docker images
 
 docker_users:
   - vagrant # Allow the vagrant user to run Docker commands
@@ -26,3 +29,6 @@ container_sites:
   - name: frontend_server_anti
     port: 3003
     source_dir: frontend_server_anti
+  - name: frontend_javascript
+    port: 3004
+    source_dir: frontend_javascript

@@ -18,8 +18,14 @@ export default function Paginate({
 }: PaginateProps) {
   const pageNumbers = [];
 
-  for (let i = 1; i <= Math.ceil(totalArticles / articlesPerPage); i++) {
-    pageNumbers.push(i);
+  for (let i = previousPage - 1; i <= Math.ceil(nextPage + 1); i++) {
+    if (i > 0 && i <= Math.ceil(totalArticles / articlesPerPage)) {
+      pageNumbers.push(i);
+    }
+  }
+
+  if (indexOfLastArticle > totalArticles) {
+    indexOfLastArticle = totalArticles;
   }
 
   return (
@@ -32,12 +38,17 @@ export default function Paginate({
         <nav aria-label="Page navigation example">
           <ul className="pagination">
             <li className="page-item">
+              <a className="page-link" href={`/?page=${1}`}>
+                <span aria-hidden="true">&laquo;</span>
+                <span className="sr-only">First</span>
+              </a>
+            </li>
+            <li className="page-item">
               <a className="page-link" href={`/?page=${previousPage}`}>
                 <span aria-hidden="true">&laquo;</span>
                 <span className="sr-only">Previous</span>
               </a>
             </li>
-
             {pageNumbers.map((number) => (
               <li key={number} className="page-item">
                 <a className="page-link" href={`/?page=${number}`}>
@@ -50,6 +61,16 @@ export default function Paginate({
               <a className="page-link" href={`/?page=${nextPage}`}>
                 <span aria-hidden="true">&raquo;</span>
                 <span className="sr-only">Next</span>
+              </a>
+            </li>
+
+            <li className="page-item">
+              <a
+                className="page-link"
+                href={`/?page=${Math.ceil(totalArticles / articlesPerPage)}`}
+              >
+                <span aria-hidden="true">&raquo;</span>
+                <span className="sr-only">Last</span>
               </a>
             </li>
           </ul>

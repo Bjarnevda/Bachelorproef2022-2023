@@ -17,6 +17,8 @@
       guest: 3002
     - host: 3003
       guest: 3003
+    - host: 3004
+      guest: 3004
     - host: 3010
       guest: 3010
     - host: 5000

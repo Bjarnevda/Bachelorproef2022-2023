@@ -24,15 +24,14 @@ def SselectorScraper(base_url,product_links, file_path):
         start_time = time.time()
         driver.get(link)
         request_time = round((time.time() - start_time) * 1000)
-        wait = WebDriverWait(driver, 10)  # Wait up to 10 seconds
-        image_locator = (By.XPATH, '//*[@id="product-tab-1"]/img')
+        wait = WebDriverWait(driver, 5)  # Wait up to 5 seconds
+        image = (By.XPATH, '//*[@id="product-5"]/div/a/img')
         try:
-            wait.until(EC.presence_of_element_located(image_locator))
+            wait.until(EC.presence_of_element_located(image))
         except:
             print("Timeout on: " + link)
         end_time = time.time()
         page_load_time = round((end_time - start_time)  * 1000)
-
         response = driver.execute_async_script(
             "var callback = arguments[arguments.length - 1]; fetch('"
             + link
@@ -116,10 +115,10 @@ def SxpathScraper(base_url,product_links, file_path):
         start_time = time.time()
         driver.get(link)
         request_time = round((time.time() - start_time) * 1000)
-        wait = WebDriverWait(driver, 10)  # Wait up to 10 seconds
-        image_locator = (By.XPATH, '//*[@id="product-tab-1"]/img')
+        wait = WebDriverWait(driver, 5)  # Wait up to 5 seconds
+        image = (By.XPATH, '//*[@id="product-5"]/div/a/img')
         try:
-            wait.until(EC.presence_of_element_located(image_locator))
+            wait.until(EC.presence_of_element_located(image))
         except:
             print("Timeout on: " + link)
         end_time = time.time()

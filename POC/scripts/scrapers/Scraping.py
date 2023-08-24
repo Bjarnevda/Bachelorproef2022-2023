@@ -48,7 +48,7 @@ def getProducts(base_url, page, headers, visited_pages=None, product_links=None)
 
         for next_link in next_links:
             next_page = int(next_link.split("=")[-1])
-            if next_page >= 2:
+            if next_page <= page:
                 continue
             product_links = getProducts(
                 base_url, next_page, headers, visited_pages, product_links
@@ -114,46 +114,45 @@ def main():
 
     print("removing CSV's")
     # Verwijder de CSV-bestanden als ze bestaan
-    removeCSV(port + "_BeautifulSoup_CSS_Selectors")
-    removeCSV(port + "_BeautifulSoup_XPath")
-    removeCSV(port + "_Selenium_CSS_Selectors")
-    removeCSV(port + "_Selenium_XPath")
-    removeCSV(port + "_Scrapy")
+    removeCSV(port + "_BeautifulSoup-CSS-Selectors_")
+    removeCSV(port + "_BeautifulSoup-XPath_")
+    removeCSV(port + "_Selenium-CSS-Selectors_")
+    removeCSV(port + "_Selenium-XPath_")
+    removeCSV(port + "_Scrapy_")
 
-    """
-    writeTimeScraped(base_url, port, "BeautifulSoup_CSS_Selectors", False)
+    writeTimeScraped(base_url, port, "_BeautifulSoup-CSS-Selectors_", False)
     print("Scraping with BeautifulSoup CSS Selectors")
     BSselectorScraper(
         base_url,
         product_links,
-        "csvs/" + port + "_BeautifulSoup_CSS_Selectors.csv",
+        "csvs/" + port + "_BeautifulSoup-CSS-Selectors_.csv",
         headers,
     )
-    writeTimeScraped(base_url, port, "BeautifulSoup_CSS_Selectors", True)
+    writeTimeScraped(base_url, port, "_BeautifulSoup-CSS-Selectors_", True)
 
-    writeTimeScraped(base_url, port, "BeautifulSoup_XPath", False)
+    writeTimeScraped(base_url, port, "_BeautifulSoup-XPath_", False)
     print("Scraping with BeautifulSoup XPath")
     BSxpathScraper(
-        base_url, product_links, "csvs/" + port + "_BeautifulSoup_XPath.csv", headers
+        base_url, product_links, "csvs/" + port + "_BeautifulSoup-XPath_.csv", headers
     )
-    writeTimeScraped(base_url, port, "BeautifulSoup_XPath", True)
-
-    writeTimeScraped(base_url, port, "Selenium_CSS_Selectors", False)
+    writeTimeScraped(base_url, port, "_BeautifulSoup-XPath_", True)
+    
+    writeTimeScraped(base_url, port, "_Selenium-CSS-Selectors_", False)
     print("Scraping with Selenium CSS Selectors")
     SselectorScraper(
-        base_url, product_links, "csvs/" + port + "_Selenium_CSS_Selectors.csv"
+        base_url, product_links, "csvs/" + port + "_Selenium-CSS-Selectors_.csv"
     )
-    writeTimeScraped(base_url, port, "Selenium_CSS_Selectors", True)
+    writeTimeScraped(base_url, port, "_Selenium-CSS-Selectors_", True)
 
-    writeTimeScraped(base_url, port, "Selenium_XPath", False)
+    writeTimeScraped(base_url, port, "_Selenium-XPath_", False)
     print("Scraping with Selenium XPath")
-    SxpathScraper(base_url, product_links, "csvs/" + port + "_Selenium_XPath.csv")
-    writeTimeScraped(base_url, port, "Selenium_XPath", True)
-"""
-    writeTimeScraped(base_url, port, "Scrapy", False)
+    SxpathScraper(base_url, product_links, "csvs/" + port + "_Selenium-XPath_.csv")
+    writeTimeScraped(base_url, port, "_Selenium-XPath_", True)
+
+    writeTimeScraped(base_url, port, "_Scrapy_", False)
     print("Scraping with Scrapy")
-    scrapyScraper(base_url, port, "csvs/" + port + "_Scrapy.csv", headers)
-    writeTimeScraped(base_url, port, "Scrapy", True)
+    scrapyScraper(base_url, port, "csvs/" + port + "_Scrapy_.csv", headers)
+    writeTimeScraped(base_url, port, "_Scrapy_", True)
 
 
 if __name__ == "__main__":

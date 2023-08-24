@@ -1,0 +1,5 @@
+titel,rating,descriptie,artikel_nummer,oude_prijs,prijs,fotos,status_code,request_time
+Product 6,4,Lorem ipsum dolor sit amet for Product 6,382860,,100.00,"http://localhost:3003/img/products/02.jpg,http://localhost:3003/img/products/04.jpg,http://localhost:3003/img/products/05.jpg",200,7
+Product 8,4,Lorem ipsum dolor sit amet for Product 8,376260,,100.00,"http://localhost:3003/img/products/04.jpg,http://localhost:3003/img/products/02.jpg",200,70
+Product 5,4,Lorem ipsum dolor sit amet for Product 5,829538,,100.00,"http://localhost:3003/img/products/01.jpg,http://localhost:3003/img/products/05.jpg,http://localhost:3003/img/products/02.jpg,http://localhost:3003/img/products/03.jpg",200,75
+Product 4,,Lorem ipsum dolor sit amet for Product 4,949962,,100.00,"http://localhost:3003/img/products/01.jpg,http://localhost:3003/img/products/02.jpg,http://localhost:3003/img/products/04.jpg,http://localhost:3003/img/products/03.jpg",200,94

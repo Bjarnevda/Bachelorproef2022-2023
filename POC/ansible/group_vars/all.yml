@@ -1,4 +1,31 @@
 # group_vars/all.yml
 # Variables visible to all nodes
 ---
+pip_install_packages:
+  - requests # Needed for the Ansible Docker modules
+  - docker-py
+  - docker
+  - urllib3==1.26.16 # downgrade urllib3 to avoid clashes with requestswhen building docker images
 
+docker_users:
+  - vagrant # Allow the vagrant user to run Docker commands
+
+container_sites:
+  - name: backend
+    port: 5000
+    source_dir: backend
+  - name: frontend
+    port: 3000
+    source_dir: frontend
+  - name: frontend_dynamische_css_selectors
+    port: 3001
+    source_dir: frontend_dynamische_css_selectors
+  - name: frontend_dynamische_tree_structure
+    port: 3002
+    source_dir: frontend_dynamische_tree_structure
+  - name: frontend_server_anti
+    port: 3003
+    source_dir: frontend_server_anti
+  - name: frontend_javascript
+    port: 3004
+    source_dir: frontend_javascript

@@ -1,0 +1,93 @@
+# monitoring.yml
+---
+- name: Pull Docker images for monitoring
+  community.docker.docker_image:
+    name: "{{ item }}"
+    source: pull
+  with_items:
+    - prom/node-exporter
+    - prom/prometheus
+    - grafana/grafana
+    - redis
+    - google/cadvisor:latest
+
+- name: Make sure Cadvisor container is started
+  community.docker.docker_container:
+    name: cadvisor
+    image: google/cadvisor:latest
+    state: started
+    privileged: true
+    ports:
+      - "8080:8080"
+    devices:
+      - "/dev/kmsg:/dev/kmsg"
+    volumes:
+      - "/:/rootfs:ro"
+      - "/var/run:/var/run:rw"
+      - "/sys:/sys:ro"
+      - "/var/lib/docker/:/var/lib/docker:ro"
+      - "/dev/disk/:/dev/disk:ro"
+      - "/cgroup:/cgroup:ro"
+
+- name: Make sure Grafana container is started
+  community.docker.docker_container:
+    name: grafana
+    image: grafana/grafana
+    state: started
+    ports:
+      - "3010:3010"
+    volumes:
+      - "/home/vagrant/grafana-conf.ini:/etc/grafana/grafana.ini"
+
+- name: Create Prometheus configuration directory
+  ansible.builtin.file:
+    path: /home/vagrant/prom
+    state: directory
+    owner: vagrant
+    group: vagrant
+    mode: "0755"
+
+- name: Write prometheus configuration file
+  ansible.builtin.copy:
+    dest: /home/vagrant/prom/prometheus.yml
+    owner: vagrant
+    group: vagrant
+    mode: "0644"
+    content: |
+      global:
+        scrape_interval: 1s
+        external_labels:
+          monitor: 'node'
+      scrape_configs:
+        - job_name: 'prometheus'
+          static_configs:
+            - targets: ['192.168.56.10:9090']
+        - job_name: 'cadvisor'
+          static_configs:
+            - targets: ["192.168.56.10:8080"]
+
+- name: Make sure Prometheus container is started
+  community.docker.docker_container:
+    name: prometheus
+    image: prom/prometheus
+    state: started
+    ports:
+      - "9090:9090"
+    volumes:
+      - "/home/vagrant/prom/prometheus.yml:/etc/prometheus/prometheus.yml"
+
+- name: create grafana datasource
+  community.grafana.grafana_datasource:
+    name: prometheus
+    ds_type: prometheus
+    grafana_url: http://192.168.56.10:3010
+    ds_url: http://192.168.56.10:9090
+    access: proxy
+    tls_skip_verify: true
+    additional_json_data:
+      timeInterval: 1s
+
+- name: create grafana dashboard
+  community.grafana.grafana_dashboard:
+    grafana_url: http://192.168.56.10:3010
+    path: /home/vagrant/grafana-dashboard.json

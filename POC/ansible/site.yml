@@ -1,5 +1,56 @@
 # site.yml
 ---
-- import_playbook: apache.yml
-- hosts: all
-  roles: []
+- name: Configure the Proof of Concept
+  hosts: all
+  roles:
+    - geerlingguy.docker
+    - geerlingguy.pip
+  tasks:
+    - name: change cgroup from 2 to 1 in grub file
+      ansible.builtin.replace:
+        path: /etc/default/grub
+        regexp: 'GRUB_CMDLINE_LINUX="(.*)"'
+        replace: 'GRUB_CMDLINE_LINUX="net.ifnames=0 biosdevname=0 crashkernel=1G-4G:192M,4G-64G:256M,64G-:512M resume=UUID=a5da4971-39e8-4ed4-b8cb-33c18b7ec024 systemd.unified_cgroup_hierarchy=0"'
+        backup: yes
+
+    - name: update grub
+      ansible.builtin.shell: grub2-mkconfig -o /boot/grub2/grub.cfg
+      become: yes
+
+    - name: Copy the source code
+      ansible.posix.synchronize:
+        src: "{{ item }}"
+        dest: /home/vagrant/
+        rsync_opts:
+          - "--exclude=node_modules"
+          - "--exclude=.next"
+      with_items:
+        - backend
+        - frontend
+        - frontend_dynamische_css_selectors
+        - frontend_dynamische_tree_structure
+        - frontend_server_anti
+        - frontend_javascript
+        - grafana-conf.ini
+        - grafana-dashboard.json
+
+    - name: Create an environment file
+      ansible.builtin.copy:
+        dest: /home/vagrant/{{ item }}/.env.local
+        owner: vagrant
+        group: vagrant
+        mode: "0644"
+        content: |
+          NEXT_PUBLIC_API_URL=http://192.168.56.10:5000
+      with_items:
+        - frontend
+        - frontend_dynamische_css_selectors
+        - frontend_dynamische_tree_structure
+        - frontend_javascript
+        - frontend_server_anti
+
+    - name: Configure and start containers
+      ansible.builtin.include_tasks: containers.yml
+
+    - name: Configure and start resource monitoring
+      ansible.builtin.include_tasks: monitoring.yml

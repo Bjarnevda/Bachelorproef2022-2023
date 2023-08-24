@@ -1,6 +1,6 @@
 import Shop from "./Shop";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5002";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
 const fetchProducts = async (
   indexOfFirstArticle: number,

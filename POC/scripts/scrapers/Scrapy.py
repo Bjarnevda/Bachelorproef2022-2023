@@ -40,10 +40,16 @@ class ProductSpider(scrapy.Spider):
         title = response.css("h4.product-title::text").extract_first()
         off_classes = response.css("i.off::attr(class)").extract_first()
         rating = 5 - off_classes.count("off")
-        description = response.css("span.description::text").extract_first()
-        article_number = response.css("span.article-number::text").extract_first()
-        old_price = response.css("div.old-price::text").extract_first()
-        price = response.css("div.regular-price::text").extract_first()
+        description = response.css("span.description::text").extract()
+        article_number = response.css("span.article-number").extract()
+        #extract the number from between <b> tags
+        article_number = article_number[0]
+        article_number = article_number.split("<b>")[1]
+        article_number = article_number.split("</b>")[0]
+        old_price = response.css("div.old-price::text").extract()
+        old_price = old_price[1]
+        price = response.css("div.regular-price::text").extract()
+        price = price[1]
         image_sources = [
             response.urljoin(img)
             for img in response.css("img.img-fluid::attr(src)").extract()

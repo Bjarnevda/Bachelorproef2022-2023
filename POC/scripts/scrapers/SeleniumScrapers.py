@@ -26,9 +26,13 @@ def SselectorScraper(base_url,product_links, file_path):
         request_time = round((time.time() - start_time) * 1000)
         wait = WebDriverWait(driver, 10)  # Wait up to 10 seconds
         image_locator = (By.XPATH, '//*[@id="product-tab-1"]/img')
-        wait.until(EC.presence_of_element_located(image_locator))
+        try:
+            wait.until(EC.presence_of_element_located(image_locator))
+        except:
+            print("Timeout on: " + link)
         end_time = time.time()
-        page_load_time = end_time - start_time
+        page_load_time = round((end_time - start_time)  * 1000)
+
         response = driver.execute_async_script(
             "var callback = arguments[arguments.length - 1]; fetch('"
             + link
@@ -57,6 +61,7 @@ def SselectorScraper(base_url,product_links, file_path):
             article_number = driver.find_element(
                 by=By.CSS_SELECTOR, value="span.article-number"
             ).text
+            article_number = (article_number.split(":")[1]).strip()
         except NoSuchElementException:
             article_number = None
 
@@ -110,17 +115,22 @@ def SxpathScraper(base_url,product_links, file_path):
     for link in product_links:
         start_time = time.time()
         driver.get(link)
+        request_time = round((time.time() - start_time) * 1000)
         wait = WebDriverWait(driver, 10)  # Wait up to 10 seconds
         image_locator = (By.XPATH, '//*[@id="product-tab-1"]/img')
-        wait.until(EC.presence_of_element_located(image_locator))
+        try:
+            wait.until(EC.presence_of_element_located(image_locator))
+        except:
+            print("Timeout on: " + link)
         end_time = time.time()
-        page_load_time = end_time - start_time
+        page_load_time = round((end_time - start_time)  * 1000)
+
         response = driver.execute_async_script(
             "var callback = arguments[arguments.length - 1]; fetch('"
             + link
             + "').then((response) => response.text().then((text) => callback({'status': response.status, 'text': text})))"
         )
-    
+
         status_code = response["status"]
     
         try:
@@ -192,6 +202,8 @@ def SxpathScraper(base_url,product_links, file_path):
                 "prijs": price,
                 "fotos": image_sources,
                 "page_load_time": page_load_time,
+                "status_code": status_code,
+                "request_time": request_time,
             }
         )
     

@@ -1,4 +1,4 @@
-#! /usr/bin/env bash
+  #! /usr/bin/env bash
 #
 # Author: Bert Van Vreckem <bert.vanvreckem@gmail.com>
 #
@@ -141,8 +141,7 @@ select_installer() {
 # returns 0 if the URL is valid, 22 otherwise
 is_valid_url() {
   local url=$1
-
-  curl --silent --fail "${url}" > /dev/null
+  curl --silent --fail ${url} > /dev/null
 }
 
 # Usage: install_role_galaxy OWNER ROLE

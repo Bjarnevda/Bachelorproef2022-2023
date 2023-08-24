@@ -9,20 +9,12 @@
     - prom/prometheus
     - grafana/grafana
     - redis
-    - gcr.io/cadvisor/cadvisor
-
-- name: Make sure Redis container is started
-  community.docker.docker_container:
-    name: redis
-    image: redis
-    state: started
-    ports:
-      - "6379:6379"
+    - google/cadvisor:latest
 
 - name: Make sure Cadvisor container is started
   community.docker.docker_container:
     name: cadvisor
-    image: gcr.io/cadvisor/cadvisor
+    image: google/cadvisor:latest
     state: started
     privileged: true
     ports:
@@ -47,18 +39,6 @@
     volumes:
       - "/home/vagrant/grafana-conf.ini:/etc/grafana/grafana.ini"
 
-- name: Make sure Node Exporter container is started
-  community.docker.docker_container:
-    name: node-exporter
-    image: prom/node-exporter
-    state: started
-    network_mode: host
-    ports:
-      - "9100:9100"
-    volumes:
-      - "/:/host:ro,rslave"
-    command: --path.rootfs=/host
-
 - name: Create Prometheus configuration directory
   ansible.builtin.file:
     path: /home/vagrant/prom
@@ -82,9 +62,6 @@
         - job_name: 'prometheus'
           static_configs:
             - targets: ['192.168.56.10:9090']
-        - job_name: 'node-exporter'
-          static_configs:
-            - targets: ['192.168.56.10:9100']
         - job_name: 'cadvisor'
           static_configs:
             - targets: ["192.168.56.10:8080"]
@@ -98,3 +75,19 @@
       - "9090:9090"
     volumes:
       - "/home/vagrant/prom/prometheus.yml:/etc/prometheus/prometheus.yml"
+
+- name: create grafana datasource
+  community.grafana.grafana_datasource:
+    name: prometheus
+    ds_type: prometheus
+    grafana_url: http://192.168.56.10:3010
+    ds_url: http://192.168.56.10:9090
+    access: proxy
+    tls_skip_verify: true
+    additional_json_data:
+      timeInterval: 1s
+
+- name: create grafana dashboard
+  community.grafana.grafana_dashboard:
+    grafana_url: http://192.168.56.10:3010
+    path: /home/vagrant/grafana-dashboard.json

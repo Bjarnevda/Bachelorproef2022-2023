@@ -19,7 +19,7 @@ def BSselectorScraper(base_url, product_links,file_path,headers):
         except AttributeError:
             title = None
         try:
-            rating = 5 - len(soup.find("i", {"class": "off"}))
+            rating = 5 - len(soup.find_all("i", {"class": "off"}))
         except (AttributeError, TypeError):
             rating = None
         try:
@@ -28,14 +28,20 @@ def BSselectorScraper(base_url, product_links,file_path,headers):
             description = None
         try:
             article_number = soup.find("span", {"class": "article-number"}).text
+            #split op : en neem het tweede deel
+            article_number = (article_number.split(":")[1]).strip()
         except AttributeError:
             article_number = None
         try:
             old_price = soup.find("div", {"class": "old-price"}).text
+            #verwijder dollar teken
+            old_price = old_price[1:]
         except AttributeError:
             old_price = None
         try:
             price = soup.find("div", {"class": "regular-price"}).text
+            #verwijder dollar teken
+            price = price[1:]
         except AttributeError:
             price = None
         try:

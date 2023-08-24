@@ -1,7 +1,7 @@
 import { ProductItem } from "../Product";
 import Header from "../Header";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5002";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
 const fetchProduct = async (id: number) => {
   try {

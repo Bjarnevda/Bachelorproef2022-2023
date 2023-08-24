@@ -1,17 +1,16 @@
-module.exports = [];
+const { v4: uuidv4 } = require("uuid"); // Importeer uuidv4 van uuid
 
-const { v4: uuidv4 } = require("uuid");
-
-// Create an object to store unique hashes for each classname
+// Maak een lege object aan ==> dit is een object waarin we de classname en de hash gaan opslaan
 const classToHashMap = {};
 
+// Maak een functie aan die de classname en de hash gaat opslaan in het object, en de hash gaat returnen
 const hashOnlyIdent = (context, _, localName) => {
-  // Check if the classname already has a hash, if not, generate a new hash and store it
+  // Check of de classname al een hash heeft, zo niet, genereer een nieuwe hash en sla deze op in het object
   if (!classToHashMap[localName]) {
     classToHashMap[localName] = `_${uuidv4().replace(/-/g, "")}`;
   }
 
-  // Return the stored hash for the classname
+  // Return de opgeslagen hash voor de classname
   return classToHashMap[localName];
 };
 
@@ -45,48 +44,3 @@ module.exports = {
     return config;
   },
 };
-
-/*const { v4: uuidv4 } = require("uuid");
-
-const generatedHash = uuidv4().replace(/-/g, "");
-
-const classToHashMap = {};
-
-const hashOnlyIdent = (context, _, localName) => {
-  // Check if the classname already has a hash, if not, generate a new hash and store it
-  if (!classToHashMap[localName]) {
-    classToHashMap[localName] = `_${uuidv4().replace(/-/g, "")}`;
-  }
-
-  // Return the stored hash for the classname
-  return classToHashMap[localName];
-};
-
-module.exports = {
-  webpack(config, { dev }) {
-    const rules = config.module.rules
-      .find((rule) => typeof rule.oneOf === "object")
-      .oneOf.filter((rule) => Array.isArray(rule.use));
-
-    if (!dev) {
-      rules.forEach((rule) => {
-        rule.use.forEach((moduleLoader) => {
-          if (
-            moduleLoader.loader &&
-            moduleLoader.loader.includes("css-loader") &&
-            !moduleLoader.loader.includes("postcss-loader")
-          ) {
-            if (!moduleLoader.options.modules) {
-              moduleLoader.options.modules = {};
-            }
-            moduleLoader.options.modules.getLocalIdent = hashOnlyIdent;
-            moduleLoader.options.esModule = false; // Disable caching
-          }
-        });
-      });
-    }
-
-    return config;
-  },
-};
-*/

@@ -1,7 +1,6 @@
 "use client";
 import Link from "next/link";
 import React, { useState, useEffect, useRef } from "react";
-
 interface StarRatingProps {
   numStars: number;
 }
@@ -48,14 +47,7 @@ interface ProductModalProps {
 }
 
 export const ProductItem: React.FC<ProductModalProps> = ({ piprops }) => {
-  const [loadContent, setLoadContent] = useState(false);
-
   useEffect(() => {
-    setLoadContent(true);
-  }, []);
-
-  useEffect(() => {
-    // Initialize the carousel once isContentLoaded becomes true
     function initCarousel() {
       $(".owl-carousel").owlCarousel({
         // Add your carousel options here
@@ -65,21 +57,20 @@ export const ProductItem: React.FC<ProductModalProps> = ({ piprops }) => {
         dots: false,
       });
     }
-    if (loadContent) {
-      if (typeof $.fn.owlCarousel === "function") {
-        // If owlCarousel is loaded, initialize the carousel
-        initCarousel();
-      } else {
-        // If not loaded, wait for the script to load
-        $(document).on("owlCarouselLoaded", initCarousel);
-      }
 
-      // Clean up event listeners when the component unmounts
-      return () => {
-        $(document).off("owlCarouselLoaded", initCarousel);
-      };
+    if (typeof $.fn.owlCarousel === "function") {
+      // If owlCarousel is loaded, initialize the carousel
+      initCarousel();
+    } else {
+      // If not loaded, wait for the script to load
+      $(document).on("owlCarouselLoaded", initCarousel);
     }
-  }, [loadContent]);
+
+    // Clean up event listeners when the component unmounts
+    return () => {
+      $(document).off("owlCarouselLoaded", initCarousel);
+    };
+  }, []);
 
   return (
     <div className="modal fade product_view">

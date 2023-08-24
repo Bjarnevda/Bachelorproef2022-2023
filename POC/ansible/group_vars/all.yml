@@ -14,9 +14,6 @@ container_sites:
   - name: backend
     port: 5000
     source_dir: backend
-  - name: backend_anti
-    port: 5002
-    source_dir: backend_anti
   - name: frontend
     port: 3000
     source_dir: frontend

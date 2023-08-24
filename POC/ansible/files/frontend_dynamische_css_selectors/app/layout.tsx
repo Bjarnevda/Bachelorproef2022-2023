@@ -18,6 +18,7 @@ import "@fontsource/poppins/400.css";
 import "@fontsource/poppins/500.css";
 import "@fontsource/poppins/700.css";
 import "@fontsource/poppins/900.css";
+import Script from "next/script";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -50,20 +51,25 @@ export default function RootLayout({
       </head>
 
       <body className={inter.className}>
+        <Script src="js/jquery.min.js" strategy="beforeInteractive" />
+        <Script src="js/jquery-ui.min.js" strategy="beforeInteractive" />
+        <Script src="js/jquery.countdown.min.js" strategy="beforeInteractive" />
+        <Script src="js/jquery.zoom.min.js" strategy="beforeInteractive" />
+        <Script src="js/bootstrap.min.js" strategy="beforeInteractive" />
+        <Script src="js/owl.carousel.min.js" strategy="beforeInteractive" />
+        <Script src="js/parallax.js" strategy="beforeInteractive" />
+        <Script src="js/ResizeSensor.min.js" strategy="beforeInteractive" />
+        <Script
+          src="js/theia-sticky-sidebar.min.js"
+          strategy="beforeInteractive"
+        />
+        <Script src="js/masonry.pkgd.min.js" strategy="beforeInteractive" />
+        <Script
+          src="js/imagesloaded.pkgd.min.js"
+          strategy="beforeInteractive"
+        />
+        <Script src="js/custom.js" strategy="beforeInteractive" />
         {children}
-
-        <script defer src="js/jquery.min.js"></script>
-        <script defer src="js/jquery-ui.min.js"></script>
-        <script defer src="js/bootstrap.min.js"></script>
-        <script defer src="js/owl.carousel.min.js"></script>
-        <script defer src="js/parallax.js"></script>
-        <script defer src="js/ResizeSensor.min.js"></script>
-        <script defer src="js/theia-sticky-sidebar.min.js"></script>
-        <script defer src="js/jquery.countdown.min.js"></script>
-        <script defer src="js/masonry.pkgd.min.js"></script>
-        <script defer src="js/imagesloaded.pkgd.min.js"></script>
-        <script defer src="js/jquery.zoom.min.js"></script>
-        <script defer src="js/custom.js"></script>
       </body>
     </html>
   );

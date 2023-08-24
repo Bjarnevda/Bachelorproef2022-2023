@@ -48,14 +48,7 @@ interface ProductModalProps {
 }
 
 export const ProductItem: React.FC<ProductModalProps> = ({ piprops }) => {
-  const [loadContent, setLoadContent] = useState(false);
-
   useEffect(() => {
-    setLoadContent(true);
-  }, []);
-
-  useEffect(() => {
-    // Initialize the carousel once isContentLoaded becomes true
     function initCarousel() {
       $(".owl-carousel").owlCarousel({
         // Add your carousel options here
@@ -65,21 +58,20 @@ export const ProductItem: React.FC<ProductModalProps> = ({ piprops }) => {
         dots: false,
       });
     }
-    if (loadContent) {
-      if (typeof $.fn.owlCarousel === "function") {
-        // If owlCarousel is loaded, initialize the carousel
-        initCarousel();
-      } else {
-        // If not loaded, wait for the script to load
-        $(document).on("owlCarouselLoaded", initCarousel);
-      }
 
-      // Clean up event listeners when the component unmounts
-      return () => {
-        $(document).off("owlCarouselLoaded", initCarousel);
-      };
+    if (typeof $.fn.owlCarousel === "function") {
+      // If owlCarousel is loaded, initialize the carousel
+      initCarousel();
+    } else {
+      // If not loaded, wait for the script to load
+      $(document).on("owlCarouselLoaded", initCarousel);
     }
-  }, [loadContent]);
+
+    // Clean up event listeners when the component unmounts
+    return () => {
+      $(document).off("owlCarouselLoaded", initCarousel);
+    };
+  }, []);
 
   function getRandomInt(min: number, max: number): number {
     return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -87,16 +79,21 @@ export const ProductItem: React.FC<ProductModalProps> = ({ piprops }) => {
 
   function addRandomDivs(children: React.ReactNode): React.ReactNode {
     return React.Children.map(children, (child, index) => {
+      // Controleer of het kind een <div>-element is
       if (React.isValidElement(child) && child.type === "div") {
+        // Bepaal het aantal willekeurige <div>-elementen dat wordt toegevoegd
         const numRandomDivs = getRandomInt(2, 5);
         const randomDivs = [];
 
+        // Voeg willekeurige <div>-elementen met display: "none" toe
         for (let i = 0; i < numRandomDivs; i++) {
           randomDivs.push(<div style={{ display: "none" }}></div>);
         }
 
+        // Roep de functie recursief aan voor de subkinderen
         const subChildren = addRandomDivs(child.props.children);
 
+        // Kloon het huidige <div>-element en voeg willekeurige <div>-elementen en subkinderen toe
         return React.cloneElement(
           child,
           child.props,
@@ -104,6 +101,7 @@ export const ProductItem: React.FC<ProductModalProps> = ({ piprops }) => {
           subChildren
         );
       }
+      // Geef het kind ongewijzigd terug als het geen <div>-element is
       return child;
     });
   }

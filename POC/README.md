@@ -14,7 +14,6 @@ Voordat je aan de slag gaat, zorg ervoor dat je de volgende tools hebt geïnstal
 - Ansible (only on Mac/Linux)
 - [Python](https://www.python.org/)
 - [Pip](https://pypi.org/project/pip/)
-- [AlmaLinux-box](https://app.vagrantup.com/almalinux/boxes/9)
 
 ## Setup
 
@@ -22,6 +21,8 @@ Voordat je aan de slag gaat, zorg ervoor dat je de volgende tools hebt geïnstal
    - Zorg ervoor dat je met beheerdersrechten bent aangemeld op je computer.
    - Navigeer naar de locatie van het script en klik met de rechtermuisknop op `SETUP_POC.bat`.
    - Kies 'Uitvoeren als administrator'.
+   - Note: bij het krijgen van een vagrant init error probeer het script uit te voeren in powershell. Moest u nog steeds problemen hebben verplaats de
+     vagrant file uit de folder, open een cmd en voer uit "vagrant init almalinux/9". Hierna sleept u de vagrant file terug en overschrijft u de nieuwgemaakte en start u de SETUP_POC.bat opnieuw.
 
 ## Scrapers Uitvoeren
 

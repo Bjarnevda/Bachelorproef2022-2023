@@ -37,26 +37,51 @@ class ProductSpider(scrapy.Spider):
         request_time = round(elapsed_time * 1000)
         
         # Haal productinformatie van de pagina
-        title = response.css("h4.product-title::text").extract_first()
-        off_classes = response.css("i.off::attr(class)").extract_first()
-        rating = 5 - off_classes.count("off")
-        description = response.css("span.description::text").extract()
-        article_number = response.css("span.article-number").extract()
-        #extract the number from between <b> tags
-        article_number = article_number[0]
-        article_number = article_number.split("<b>")[1]
-        article_number = article_number.split("</b>")[0]
-        old_price = response.css("div.old-price::text").extract()
-        old_price = old_price[1]
-        price = response.css("div.regular-price::text").extract()
-        price = price[1]
-        image_sources = [
-            response.urljoin(img)
-            for img in response.css("img.img-fluid::attr(src)").extract()
-        ]
+        try:
+            title = response.css("h4.product-title::text").extract_first()
+        except:
+            title = None
 
-        # verwijder image duplicates
-        image_sources = list(dict.fromkeys(image_sources))
+        try:
+            off_classes = response.css("i.off::attr(class)").extract_first()
+            rating = 5 - off_classes.count("off")
+        except:
+            rating = None
+
+        try:
+            description = response.css("span.description::text").extract()
+        except:
+            description = None
+
+        try:
+            article_number = response.css("span.article-number").extract()
+            article_number = article_number[0]
+            article_number = article_number.split("<b>")[1]
+            article_number = article_number.split("</b>")[0]
+        except:
+            article_number = None
+
+        try:
+            old_price = response.css("div.old-price::text").extract()
+            old_price = old_price[1]
+        except:
+            old_price = None
+
+        try:
+            price = response.css("div.regular-price::text").extract()
+            price = price[1]
+        except:
+            price = None
+
+        try:
+            image_sources = [
+                response.urljoin(img)
+                for img in response.css("img.img-fluid::attr(src)").extract()
+            ]
+            # verwijder image duplicates
+            image_sources = list(dict.fromkeys(image_sources))
+        except:
+            image_sources = None
 
         yield {
             "titel": title,
